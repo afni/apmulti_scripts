@@ -65,7 +65,7 @@ afni_proc.py                                                            \
      -anat_follower_erode      FSvent FSWe                              \
      -dsets_me_run             ${dsets_epi_me}                          \
      -echo_times               ${me_times}                              \
-     -combine_method OC                                                 \
+     -combine_method           OC                                       \
      -tcat_remove_first_trs    ${nt_rm}                                 \
      -tshift_interp            -wsinc9                                  \
      -align_opts_aea           -cost lpc+ZZ -giant_move -check_flip     \
