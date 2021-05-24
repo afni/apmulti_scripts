@@ -30,8 +30,8 @@ set dsets_NL_warp = ( ${dir_ssw}/anatQQ.${isubj}.nii         \
                       ${dir_ssw}/anatQQ.${isubj}.aff12.1D    \
                       ${dir_ssw}/anatQQ.${isubj}_WARP.nii  )
 
-set epi_forward   = "${dir_epi/epi.r04.blip.fwd.chan2+orig[0]"
-set epi_reverse   = "${dir_epi/epi.r03.blip+orig[0]"
+set epi_forward   = "${dir_epi}/epi.r04.blip.fwd.chan2+orig[0]"
+set epi_reverse   = "${dir_epi}/epi.r03.blip+orig[0]"
 set dsets_epi_me  = ( ${dir_epi}/epi.r11.rest_chan_*+orig.HEAD )
 set me_times      = ( 12.5 27.6 42.7 )
 

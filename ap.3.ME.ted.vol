@@ -14,25 +14,25 @@ set isubj         = NvR_S02
 
 # directories
 set dir_inroot    = ../NvR_S02.test
-set dir_ssw       = $dir_inroot/ssw_results_NvR_S02
-set dir_epi       = $dir_inroot/dimon.output
-set dir_suma      = $dir_inroot/SUMA
+set dir_ssw       = ${dir_inroot}/ssw_results_NvR_S02
+set dir_epi       = ${dir_inroot}/dimon.output
+set dir_suma      = ${dir_inroot}/SUMA
 
 # dataset inputs
-set anat_cp       = $dir_ssw/anatSS.$isubj.nii
-set anat_skull    = $dir_ssw/anatU.$isubj.nii
+set anat_cp       = ${dir_ssw}/anatSS.${isubj}.nii
+set anat_skull    = ${dir_ssw}/anatU.${isubj}.nii
 
-set roi_all_2009  = $dir_suma/aparc.a2009s+aseg_REN_all.nii.gz
-set roi_FSvent    = $dir_suma/fs_ap_latvent.nii.gz
-set roi_FSWe      = $dir_suma/fs_ap_wm.nii.gz
+set roi_all_2009  = ${dir_suma}/aparc.a2009s+aseg_REN_all.nii.gz
+set roi_FSvent    = ${dir_suma}/fs_ap_latvent.nii.gz
+set roi_FSWe      = ${dir_suma}/fs_ap_wm.nii.gz
 
-set dsets_NL_warp = ( $dir_ssw/anatQQ.$isubj.nii         \
-                      $dir_ssw/anatQQ.$isubj.aff12.1D    \
-                      $dir_ssw/anatQQ.${isubj}_WARP.nii  )
+set dsets_NL_warp = ( ${dir_ssw}/anatQQ.${isubj}.nii         \
+                      ${dir_ssw}/anatQQ.${isubj}.aff12.1D    \
+                      ${dir_ssw}/anatQQ.${isubj}_WARP.nii  )
 
-set epi_forward   = "$dir_epi/epi.r04.blip.fwd.chan2+orig[0]"
-set epi_reverse   = "$dir_epi/epi.r03.blip+orig[0]"
-set dsets_epi_me  = ( $dir_epi/epi.r11.rest_chan_*+orig.HEAD )
+set epi_forward   = "${dir_epi}/epi.r04.blip.fwd.chan2+orig[0]"
+set epi_reverse   = "${dir_epi}/epi.r03.blip+orig[0]"
+set dsets_epi_me  = ( ${dir_epi}/epi.r11.rest_chan_*+orig.HEAD )
 set me_times      = ( 12.5 27.6 42.7 )
 
 
