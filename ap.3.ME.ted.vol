@@ -85,26 +85,14 @@ afni_proc.py                                                            \
      -volreg_compute_tsnr      yes                                      \
      -blur_size                ${blur_size}                             \
      -mask_epi_anat            yes                                      \
-    ### double check from here below?  These differ from AP2 (and AP1):   \
-    # -regress_motion_per_run                                            \
-    # -regress_ROI_PC FSvent    3                                        \
-    # -regress_ROI_PC_per_run   FSvent                                   \
-    # -regress_make_corr_vols   aeseg FSvent                             \
-    # -regress_anaticor_fast                                             \
-    # -regress_anaticor_label   FSWe                                     \
-    # -regress_censor_motion    ${cen_motion}                            \
-    # -regress_censor_outliers  ${cen_outliers}                          \
-    # -regress_apply_mot_types  demean deriv                             \
-    # -regress_est_blur_epits                                            \
-    # -regress_est_blur_errts                                            \
      -regress_motion_per_run                                            \
-     -regress_make_corr_vols aeseg FSvent                               \
-     -regress_censor_motion ${cen_motion}                                 \
-     -regress_censor_outliers ${cen_outliers}                             \
-     -regress_apply_mot_types demean deriv                              \
+     -regress_make_corr_vols   aeseg FSvent                             \
+     -regress_censor_motion    ${cen_motion}                            \
+     -regress_censor_outliers  ${cen_outliers}                          \
+     -regress_apply_mot_types  demean deriv                             \
      -regress_est_blur_epits                                            \
      -regress_est_blur_errts                                            \
-     -html_review_style pythonic  
+     -html_review_style        pythonic  
 
    # -compare_opts 'example 13'
 
