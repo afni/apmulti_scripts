@@ -1,38 +1,63 @@
-#!/bin/tcsh
 
-#----------------------------------------------------------------------
+# convert DICOM data into AFNI trees: datasets/anat,epi
+# 
+# input: DICOM directory root
+
+set prog = `basename $0`
+if ( $#argv != 1 ) then
+   echo "** usage: $prog DICOM_ROOT"
+   exit 1
+endif
+
+# input vars
+set din_dicom   = $1
+
+# output vars
+set dout_dimon  = dimon_work
+set epi_prefix  = epi
+set do_recenter = 1        # keep off to match RT and dimon output
+
+
+# ----------------------------------------------------------------------
+# check input dir
+
+if ( ! -d $din_dicom ) then
+   echo "** missing input DICOM dir $din_dicom"
+   exit 1
+endif
+
+# ===========================================================================
+# DICOM
+# ===========================================================================
+
+# ----------------------------------------------------------------------
 # works on all but 01 (localizer), 02 (asset calib), 10 (anat NIFTI)
 # dir 03 is single echo blip
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 
-set outdir = dimon.output
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 # associate labels with directory names
+# (go to DICOM dir and return)
+
+cd $din_dicom
+set din_dicom_abs = `pwd`
+
 set dirs_skip  = ( mr_0001 )
 set dirs_basic = ( mr_000[2-3] )          # asset, reverse blip
 set labs_basic = ( asset blip )
 
-set dirs_ME    = ( mr_000[4-9] mr_0011 )  # naming1, 1, naming2, 2, recog1, 2, rest
+# directory and matched label scripts
+set dirs_ME    = ( mr_000[4-9] mr_0011 )
 set labs_ME    = ( naming_{1.1,1.2,2.1,2.2} recog_{1,2} rest )
 
-set dirs_anat  = ( mr_0010 )
+cd -
 
-#----------------------------------------------------------------------
-# check, create and enter output dir
-if ( -d $outdir ) then
-   echo "** already have output dir $outdir, refusing to proceed"
-   exit 1
-endif
-mkdir $outdir
-
-cd $outdir
-
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 # I thought we were not supposed to need this set...
 setenv AFNI_SLICE_SPACING_IS_GAP NO
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 # basic dirs ( single echo )
 set dir_list = ( $dirs_basic )
 set lab_list = ( $labs_basic )
@@ -41,13 +66,13 @@ foreach index ( `count -digits 1 1 $#dir_list` )
     set dlab = `echo $dir | cut -b6-`
     set label = $lab_list[$index]
 
-    Dimon -infile_pat ../$dir/'*.dcm'           \
+    Dimon -infile_pat $din_dicom/$dir/'*.dcm'   \
           -gert_create_dataset                  \
           -save_details DET.$dir                \
-          -gert_to3d_prefix epi.r$dlab.$label
+          -gert_to3d_prefix $epi_prefix.r$dlab.$label
 end
 
-#----------------------------------------------------------------------
+# ----------------------------------------------------------------------
 # multi-echo dirs
 set dir_list = ( $dirs_ME )
 set lab_list = ( $labs_ME )
@@ -56,15 +81,29 @@ foreach index ( `count -digits 1 1 $#dir_list` )
     set dlab = `echo $dir | cut -b6-`
     set label = $lab_list[$index]
 
-    Dimon -infile_pat ../$dir/'*.dcm'           \
+    Dimon -infile_pat $din_dicom/$dir/'*.dcm'   \
           -gert_create_dataset                  \
           -save_details DET.$dir                \
           -num_chan 3 -sort_method geme_index   \
-          -gert_to3d_prefix epi.r$dlab.$label
+          -gert_to3d_prefix $epi_prefix.r$dlab.$label
 end
 
-#----------------------------------------------------------------------
-# anat
-set dir = $dirs_anat
-cp -pv ../$dir/* . 
+# ----------------------------------------------------------------------
+# possibly try to match 0,0,0 across these oblique datasets
+# (do 1 at a time to keep history short)
+if ( $do_recenter ) then
+   foreach epi ( $epi_prefix.*.HEAD )
+      3drefit -oblique_recenter $epi
+   end
+endif
+
+# ----------------------------------------------------------------------
+# fake a blip forward dataset by copying 10 vols from run 04 chan 2
+3dTcat -prefix $epi_prefix.r04.blip.fwd.chan2 \
+              "$epi_prefix.r04.naming_1.1_chan_002+orig[0..9]"
+
+# ----------------------------------------------------------------------
+# cleanup dimon files
+mkdir $dout_dimon
+mv DET.* GERT_Reco* dimon.files* $dout_dimon
 
