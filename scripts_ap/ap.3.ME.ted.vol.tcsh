@@ -4,6 +4,9 @@
 # basic, single echo rest, but more like example 13
 # ---------------------------------------------------------------------------
 
+# Note: The tedana.py called by this script for combine_method = 'OC_tedort'
+#       requires using Python 2.7.
+
 # ---------------------------------------------------------------------------
 # data and control variables
 # ---------------------------------------------------------------------------
