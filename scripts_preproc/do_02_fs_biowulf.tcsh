@@ -31,7 +31,7 @@ set dir_fs        = ${dir_inroot}/data_02_fs/${subj}
 set dir_suma      = ${dir_fs}/SUMA
 
 # dsets
-set dset_anat0    = ${dir_basic}/ses-01/anat/${subj}_ses-01-mprage_run-1_T1w.nii.gz
+set dset_anat0    = ${dir_basic}/ses-01/anat/${subj}_ses-01_mprage_run-1_T1w.nii.gz
 
 # logs
 set log_fsA       = ${dir_log}/log_02_fs-A_${subj}.txt

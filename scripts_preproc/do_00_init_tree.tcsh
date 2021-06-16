@@ -12,7 +12,7 @@ set din_scripts = git/apmulti_scripts
 
 # contains DICOM images
 set din_dicom = NvR_S02.clean
-set anat_name = ${subj}_${ses}-mprage_run-1_T1w.nii.gz
+set anat_name = ${subj}_${ses}_mprage_run-1_T1w.nii.gz
 
 # SSW and FreeSurfer results
 set din_ssw   = APMULTI/ssw_results_NvR_S02

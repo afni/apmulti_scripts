@@ -30,7 +30,7 @@ set dir_suma      = ${dir_fs}/SUMA
 set dir_ssw       = ${dir_inroot}/data_03_ssw/${subj}
 
 # dsets
-set dset_anat0    = ${dir_basic}/ses-01/anat/${subj}_ses-01-mprage_run-1_T1w.nii.gz
+set dset_anat0    = ${dir_basic}/ses-01/anat/${subj}_ses-01_mprage_run-1_T1w.nii.gz
 
 # logs
 set log_ssw       = ${dir_log}/log_03_ssw_${subj}.txt
