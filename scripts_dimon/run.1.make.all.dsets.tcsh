@@ -1,5 +1,6 @@
 
 # convert DICOM data into AFNI trees: datasets/anat,epi
+# (and put physio files under 'physio' subdir)
 # 
 # input: DICOM directory root
 
@@ -11,18 +12,18 @@ endif
 
 # input vars
 set din_dicom   = $1
+set din_physio  = physio_pulse_respiration_traces  # under $din_dicom
 
 # output vars
 set dout_dimon  = dimon_work
 set epi_prefix  = epi
 set do_recenter = 1        # keep off to match RT and dimon output
 
-
 # ----------------------------------------------------------------------
 # check input dir
 
-if ( ! -d $din_dicom ) then
-   echo "** missing input DICOM dir $din_dicom"
+if ( ! -d $din_dicom/$din_physio ) then
+   echo "** missing input DICOM/physio dir $din_dicom$din_physio"
    exit 1
 endif
 
@@ -103,7 +104,11 @@ endif
               "$epi_prefix.r04.naming_1.1_chan_002+orig[0..9]"
 
 # ----------------------------------------------------------------------
+# copy physio tree here
+\cp -rp $din_dicom_abs/$din_physio physio
+
+# ----------------------------------------------------------------------
 # cleanup dimon files
-mkdir $dout_dimon
-mv DET.* GERT_Reco* dimon.files* $dout_dimon
+\mkdir $dout_dimon
+\mv DET.* GERT_Reco* dimon.files* $dout_dimon
 

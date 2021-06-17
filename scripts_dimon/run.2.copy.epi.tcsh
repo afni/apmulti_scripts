@@ -1,5 +1,6 @@
 
 # copy DIMON output to NIFTI format with BIDS-ish naming
+# (and include physio)
 # 
 # input:  Dimon output 'func' dir
 # output: demo output 'func' dir
@@ -54,6 +55,10 @@ set ename    = echo-1
 3dcopy ${din_dicom}/epi.r04.blip.fwd.chan2+orig   \
        ${dout_func}/${sid}_acq-blip_dir-match_run-1_${suffix}
 
+# ======================================================================
+# the following (task and rest) EPI dsets include physio files
+# ======================================================================
+
 # ----------------------------------------------------------------------
 # naming
 
@@ -66,8 +71,9 @@ foreach tver ( 1 2 )
     @ iind += 1
 
     foreach eind ( 1 2 3 )
-      3dcopy ${din_dicom}/epi.r$irun.${task}_${tver}.${run}_chan_00${eind}+orig   \
-             ${dout_func}/${sid}_task-${task}-${tver}_run-${run}_echo-${eind}_${suffix}
+      set ein  = epi.r$irun.${task}_${tver}.${run}_chan_00${eind}+orig
+      set eout = ${sid}_task-${task}-${tver}_run-${run}_echo-${eind}_${suffix}
+      3dcopy ${din_dicom}/${ein} ${dout_func}/${eout}
     end
   end
 end
@@ -84,8 +90,9 @@ foreach tver ( 1 2 )
     @ iind += 1
 
     foreach eind ( 1 2 3 )
-      3dcopy ${din_dicom}/epi.r$irun.${task}_${tver}_chan_00${eind}+orig   \
-             ${dout_func}/${sid}_task-${task}-${tver}_run-${run}_echo-${eind}_${suffix}
+      set ein  = epi.r$irun.${task}_${tver}_chan_00${eind}+orig
+      set eout = ${sid}_task-${task}-${tver}_run-${run}_echo-${eind}_${suffix}
+      3dcopy ${din_dicom}/${ein} ${dout_func}/${eout}
     end
   end
 end
@@ -101,8 +108,9 @@ foreach run ( 1 )
     @ iind += 1
 
     foreach eind ( 1 2 3 )
-      3dcopy ${din_dicom}/epi.r$irun.${task}_chan_00${eind}+orig   \
-             ${dout_func}/${sid}_task-${task}_run-${run}_echo-${eind}_${suffix}
+      set ein  = epi.r$irun.${task}_chan_00${eind}+orig
+      set eout = ${sid}_task-${task}_run-${run}_echo-${eind}_${suffix}
+      3dcopy ${din_dicom}/${ein} ${dout_func}/${eout}
     end
 end
 
