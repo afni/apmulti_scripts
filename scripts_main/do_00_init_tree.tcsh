@@ -7,6 +7,11 @@
 # main vars to possibly modify
 
 # ----------------------------------------
+# subject ID (for output)
+set subj  = sub-001
+set ses   = ses-01
+
+# ----------------------------------------
 # top-level input and output dirs
 
 # dir contains all scripts (git tree or copy)
@@ -29,11 +34,6 @@ set anat_out    = ${subj}_${ses}_mprage_run-1_T1w.nii.gz
 set din_ssw     = ${din_extras}/ssw_results_NvR_S02
 set din_suma    = ${din_extras}/group_fs/sub_02/SUMA
  
-# ----------------------------------------
-# subject ID (for output)
-set subj  = sub-001
-set ses   = ses-01
-
 # ===========================================================================
 # verify inputs
 
@@ -53,46 +53,46 @@ endif
 # get to work
 
 # init main directories (if not already present)
-mkdir -p $dout_aproot
+\mkdir -p $dout_aproot
 
 # apmulti_dicom
-mkdir -p $dout_aproot/apmulti_dicom/scripts
-mkdir -p $dout_aproot/apmulti_dicom/data_00_dicom/$subj
+\mkdir -p $dout_aproot/apmulti_dicom/data_00_dicom/$subj
 
 # apmulti_demo
-mkdir -p $dout_aproot/apmulti_demo/data_00_input/$subj/$ses
-mkdir -p $dout_aproot/apmulti_demo/data_12_fs/$subj
-mkdir -p $dout_aproot/apmulti_demo/data_13_ssw
+\mkdir -p $dout_aproot/apmulti_demo/data_00_input/$subj/$ses
+\mkdir -p $dout_aproot/apmulti_demo/data_12_fs/$subj
+\mkdir -p $dout_aproot/apmulti_demo/data_13_ssw
 
 
 # ----------------------------------------------------------------------
-# copy the main scripts in
-cp -rp $din_scripts/scripts_main $dout_aproot/scripts
+# copy the scripts scripts in
+\cp -rp $din_scripts/scripts_main $dout_aproot/scripts
+\cp -rp $din_scripts/scripts_dicom $dout_aproot/apmulti_dicom/scripts
+\cp -rp $din_scripts/scripts_demo $dout_aproot/apmulti_demo/scripts
 
 
 # ----------------------------------------------------------------------
 # apmulti_demo: copy anatomical
-mkdir -p $dout_aproot/apmulti_demo/data_00_basic/$subj/$ses/anat
-3dcopy $din_dicom/mr_0010/NvR_S02_anat_NoSkull+orig \
-       $dout_aproot/apmulti_demo/data_00_basic/$subj/$ses/anat/$anat_out
-nifti_tool -rm_ext ALL -overwrite -infile \
-       $dout_aproot/apmulti_demo/data_00_basic/$subj/$ses/anat/$anat_out
+
+set dout_subj = $dout_aproot/apmulti_demo/data_00_basic/$subj/$ses
+
+\mkdir -p $dout_aproot/apmulti_demo/data_00_basic/$subj/$ses/anat
+3dcopy $anat_in $dout_subj/anat/$anat_out
+nifti_tool -rm_ext ALL -overwrite -infile $dout_subj/anat/$anat_out
 
 # ----------------------------------------------------------------------
 # apmulti_demo: copy SSW and SUMA results
-cp -rp $din_suma $dout_aproot/apmulti_demo/data_02_fs/$subj
-cp -rp $din_ssw $dout_aproot/apmulti_demo/data_03_ssw/$subj
+\cp -rp $din_suma $dout_aproot/apmulti_demo/data_12_fs/$subj
+\cp -rp $din_ssw $dout_aproot/apmulti_demo/data_13_ssw/$subj
 
 
 # ----------------------------------------------------------------------
-# apmulti_dicom: copy DICOM scripts and data
-
-if ( ! -f $dout_aproot/apmulti_dicom/scripts/run.1.make.all.dsets ) then
-   cp -p $din_scripts/scripts_dimon/run.* $dout_aproot/apmulti_dicom/scripts
-endif
+# apmulti_dicom: copy DICOM data
 
 # cp is appropriate, but a pre-made copy to mv is faster to test
 if ( ! -d $dout_aproot/apmulti_dicom/data_00_basic/$subj/$ses ) then
-   cp -rp $din_dicom $dout_aproot/apmulti_dicom/data_00_basic/$subj/$ses
+   \mkdir -p $dout_aproot/apmulti_dicom/data_00_basic/$subj/$ses
+   rsync -avq --exclude mr_0010_proc $din_dicom \
+         $dout_aproot/apmulti_dicom/data_00_basic/$subj/$ses/
 endif
 
