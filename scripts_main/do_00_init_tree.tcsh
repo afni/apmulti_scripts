@@ -8,21 +8,21 @@ set subj  = sub-001
 set ses   = ses-01
 
 # contains scripts for Dimon
-set din_scripts = git/apmulti_scripts
+set din_scripts = apmulti_scripts
 
 # contains DICOM images
-set din_dicom = NvR_S02.clean
-set anat_name = ${subj}_${ses}_mprage_run-1_T1w.nii.gz
+set din_dicom   = NvR_S02
+set anat_name   = ${subj}_${ses}_mprage_run-1_T1w.nii.gz
 
 # SSW and FreeSurfer results
-set din_ssw   = APMULTI/ssw_results_NvR_S02
-# ** todo : we might want to copy entire FS output tree
-set din_suma  = APMULTI/SUMA
+set din_extras  = NvR_S02/mr_0010_proc
+set din_ssw     = $din_extras/ssw_results_NvR_S02
+set din_suma    = $din_extras/group_fs/sub_02/SUMA
  
 # ----------------------------------------------------------------------
 # be sure input dirs exist
-if ( ! -d $din_scripts/scripts_preproc || ! -d $din_dicom ) then
-   echo "** missing main input dirs, $din_scripts/scripts_preproc or $din_dicom"
+if ( ! -d $din_scripts/scripts_main || ! -d $din_extras ) then
+   echo "** missing main input dirs, $din_scripts/scripts_main or $din_extras"
    exit 1
 endif
 
