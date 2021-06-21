@@ -6,8 +6,8 @@
 # output: demo output 'func' dir
 
 set din_root    = apmulti_dicom
-set din_droot   = data_01_AFNI_EPI
-set dout_droot  = data_02_NIFTI_EPI
+set din_droot   = data_11_AFNI_EPI
+set dout_droot  = data_12_NIFTI_EPI
 set subj        = sub-001
 set ses         = ses-01
 

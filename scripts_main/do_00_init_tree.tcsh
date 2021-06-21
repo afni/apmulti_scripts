@@ -61,7 +61,7 @@ endif
 \mkdir -p $dout_aproot/apmulti_dicom/logs
 
 # apmulti_demo
-\mkdir -p $dout_aproot/apmulti_demo/data_00_input/$subj/$ses
+\mkdir -p $dout_aproot/apmulti_demo/data_00_basic/$subj/$ses
 \mkdir -p $dout_aproot/apmulti_demo/data_12_fs/$subj
 \mkdir -p $dout_aproot/apmulti_demo/data_13_ssw
 \mkdir -p $dout_aproot/apmulti_demo/logs
@@ -81,6 +81,10 @@ set dout_subj = $dout_aproot/apmulti_demo/data_00_basic/$subj/$ses
 \mkdir -p $dout_aproot/apmulti_demo/data_00_basic/$subj/$ses/anat
 3dcopy $anat_in $dout_subj/anat/$anat_out
 nifti_tool -rm_ext ALL -overwrite -infile $dout_subj/anat/$anat_out
+
+# and copy a corresponding png file
+cp ${din_extras}/anat_02_anon.face.sag.png \
+   ${subj}_${ses}_mprage_run-1_T1w_face-sag.png
 
 # ----------------------------------------------------------------------
 # apmulti_demo: copy SSW and SUMA results

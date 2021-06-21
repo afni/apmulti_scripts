@@ -8,7 +8,7 @@
 # main data vars
 set din_root    = apmulti_dicom
 set din_droot   = data_00_dicom
-set dout_droot  = data_01_AFNI_EPI
+set dout_droot  = data_11_AFNI_EPI
 set subj        = sub-001
 set ses         = ses-01
 
