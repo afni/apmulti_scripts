@@ -2,13 +2,7 @@
 # convert DICOM data into AFNI trees: datasets/anat,epi
 # (and put physio files under 'physio' subdir)
 # 
-# input: DICOM directory root
-
-set prog = `basename $0`
-if ( $#argv != 1 ) then
-   echo "** usage: $prog DICOM_ROOT"
-   exit 1
-endif
+# 
 
 # input vars
 set din_dicom   = $1

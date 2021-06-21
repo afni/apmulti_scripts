@@ -54,15 +54,17 @@ endif
 
 # init main directories (if not already present)
 \mkdir -p $dout_aproot
+\mkdir -p $dout_aproot/logs
 
 # apmulti_dicom
 \mkdir -p $dout_aproot/apmulti_dicom/data_00_dicom/$subj
+\mkdir -p $dout_aproot/apmulti_dicom/logs
 
 # apmulti_demo
 \mkdir -p $dout_aproot/apmulti_demo/data_00_input/$subj/$ses
 \mkdir -p $dout_aproot/apmulti_demo/data_12_fs/$subj
 \mkdir -p $dout_aproot/apmulti_demo/data_13_ssw
-
+\mkdir -p $dout_aproot/apmulti_demo/logs
 
 # ----------------------------------------------------------------------
 # copy the scripts scripts in
@@ -90,9 +92,11 @@ nifti_tool -rm_ext ALL -overwrite -infile $dout_subj/anat/$anat_out
 # apmulti_dicom: copy DICOM data
 
 # cp is appropriate, but a pre-made copy to mv is faster to test
-if ( ! -d $dout_aproot/apmulti_dicom/data_00_basic/$subj/$ses ) then
-   \mkdir -p $dout_aproot/apmulti_dicom/data_00_basic/$subj/$ses
-   rsync -avq --exclude mr_0010_proc $din_dicom \
-         $dout_aproot/apmulti_dicom/data_00_basic/$subj/$ses/
+if ( ! -d $dout_aproot/apmulti_dicom/data_00_dicom/$subj/$ses ) then
+   \mkdir -p $dout_aproot/apmulti_dicom/data_00_dicom/$subj/$ses
+   rsync -avq --exclude mr_0010_proc                                 \
+              --exclude physio_pulse_respiration_traces.orig         \
+              $din_dicom/                                            \
+              $dout_aproot/apmulti_dicom/data_00_dicom/$subj/$ses/
 endif
 
