@@ -1,15 +1,33 @@
 
-# convert DICOM data into AFNI trees: datasets/anat,epi
+# convert DICOM data into AFNI EPI datasets
 # (and put physio files under 'physio' subdir)
-# 
-# 
 
-# input vars
-set din_dicom   = $1
+# This should be run form apmulti_dicom or the scripts directory.
+
+# --------------------------------------------------
+# main data vars
+set din_root    = apmulti_dicom
+set din_droot   = data_00_dicom
+set dout_droot  = data_01_AFNI_EPI
+set subj        = sub-001
+set ses         = ses-01
+
+# --------------------------------------------------
+# might be common to run from scripts, but start up one dir
+if ( $PWD:t == "scripts" ) then
+   cd ..
+endif
+if ( $PWD:t != $din_root ) then
+   echo "** should be run from $din_root/scripts"
+   exit 1
+endif
+
+# data source dirs
+set din_dicom   = $din_droot/$subj/$ses
 set din_physio  = physio_pulse_respiration_traces  # under $din_dicom
 
 # output vars
-set dout_dimon  = dimon_work
+set dout_dimon  = $dout_droot/$subj/$ses
 set epi_prefix  = epi
 set do_recenter = 1        # keep off to match RT and dimon output
 
@@ -36,7 +54,7 @@ endif
 # (go to DICOM dir and return)
 
 cd $din_dicom
-set din_dicom_abs = `pwd`
+set din_dicom_path = `pwd`
 
 set dirs_skip  = ( mr_0001 )
 set dirs_basic = ( mr_000[2-3] )          # asset, reverse blip
@@ -53,6 +71,11 @@ cd -
 setenv AFNI_SLICE_SPACING_IS_GAP NO
 
 # ----------------------------------------------------------------------
+# now that we have a full path to the input, create and enter output dir
+\mkdir -p $dout_dimon
+cd $dout_dimon
+
+# ----------------------------------------------------------------------
 # basic dirs ( single echo )
 set dir_list = ( $dirs_basic )
 set lab_list = ( $labs_basic )
@@ -61,9 +84,9 @@ foreach index ( `count -digits 1 1 $#dir_list` )
     set dlab = `echo $dir | cut -b6-`
     set label = $lab_list[$index]
 
-    Dimon -infile_pat $din_dicom/$dir/'*.dcm'   \
-          -gert_create_dataset                  \
-          -save_details DET.$dir                \
+    Dimon -infile_pat $din_dicom_path/$dir/'*.dcm'    \
+          -gert_create_dataset                        \
+          -save_details DET.$dir                      \
           -gert_to3d_prefix $epi_prefix.r$dlab.$label
 end
 
@@ -76,10 +99,10 @@ foreach index ( `count -digits 1 1 $#dir_list` )
     set dlab = `echo $dir | cut -b6-`
     set label = $lab_list[$index]
 
-    Dimon -infile_pat $din_dicom/$dir/'*.dcm'   \
-          -gert_create_dataset                  \
-          -save_details DET.$dir                \
-          -num_chan 3 -sort_method geme_index   \
+    Dimon -infile_pat $din_dicom_path/$dir/'*.dcm'    \
+          -gert_create_dataset                        \
+          -save_details DET.$dir                      \
+          -num_chan 3 -sort_method geme_index         \
           -gert_to3d_prefix $epi_prefix.r$dlab.$label
 end
 
@@ -99,10 +122,10 @@ endif
 
 # ----------------------------------------------------------------------
 # copy physio tree here
-\cp -rp $din_dicom_abs/$din_physio physio
+\cp -rp $din_dicom_path/$din_physio physio
 
 # ----------------------------------------------------------------------
 # cleanup dimon files
-\mkdir $dout_dimon
-\mv DET.* GERT_Reco* dimon.files* $dout_dimon
+\mkdir -p dimon_work
+\mv DET.* GERT_Reco* dimon.files* dimon_work
 
