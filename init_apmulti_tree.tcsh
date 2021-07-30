@@ -1,4 +1,3 @@
-init_tree
 # ---------------------------------------------------------------------------
 # build APMULTI tree *in place*
 # input: require path to apmulti_data.tgz file
@@ -20,7 +19,7 @@ set dir_scratch = /scratch/$user
 # check to see whether the scratch dir exists
 if ( $use_scratch && ! -d $dir_scratch ) then
    echo "** missing scratch dir, $dir_scratch"
-   ecoh "   (consider clearing use_scratch in script)"
+   echo "   (consider clearing use_scratch in script)"
    exit 0
 endif
 
@@ -53,7 +52,7 @@ if ( $tgzdir == $tgzpath ) then
 endif
 
 if ( $tgzfile != $datadir.tgz ) then
-   echo "** input should be $datadir.tgz"
+   echo "** input should be path/to/$datadir.tgz"
    exit 0
 endif
 
