@@ -18,7 +18,7 @@ set ses   = ses-01
 set din_scripts = apmulti_scripts
 
 # contains DICOM images and extras (anat, FS and SSW output)
-set din_dicom   = NvR_S02
+set din_dicom   = apmulti_data
 set din_extras  = $din_dicom/mr_0010_proc
 
 # root of tree (to possibly distribute)
@@ -44,9 +44,10 @@ if ( ! -d $din_scripts/scripts_main || ! -d $din_extras ) then
    exit 1
 endif
 
+# SSW and SUMA are optional
 if ( ! -d $din_ssw || ! -d $din_suma ) then
-   echo "** missing SSW or SUMA dir, $din_ssw or $din_suma"
-   exit 1
+   echo "note: missing SSW or SUMA dir, $din_ssw or $din_suma"
+   echo "      (they will be skipped)"
 endif
 
 # ===========================================================================
@@ -88,8 +89,13 @@ cp ${din_extras}/anat_02_anon.face.sag.png \
 
 # ----------------------------------------------------------------------
 # apmulti_demo: copy SSW and SUMA results
-\cp -rp $din_suma $dout_aproot/apmulti_demo/data_12_fs/$subj
+if ( -d $din_ssw ) then
 \cp -rp $din_ssw $dout_aproot/apmulti_demo/data_13_ssw/$subj
+endif
+
+if ( -d $din_suma ) then
+   \cp -rp $din_suma $dout_aproot/apmulti_demo/data_12_fs/$subj
+endif
 
 
 # ----------------------------------------------------------------------
