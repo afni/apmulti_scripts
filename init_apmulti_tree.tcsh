@@ -13,7 +13,7 @@ set reponame    = apmulti_scripts
 
 # on biowulf, this works better from the /scratch tree
 # set to 0 to put the data into the current location
-set use_scratch = 1
+set use_scratch = 0
 set dir_scratch = /scratch/$user
 
 # check to see whether the scratch dir exists
