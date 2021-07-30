@@ -15,7 +15,7 @@ set ses   = ses-01
 # top-level input and output dirs
 
 # dir contains all scripts (git tree or copy)
-set din_scripts = apmulti_scripts
+set din_scripts = apmulti_scripts/for_desktop
 
 # contains DICOM images and extras (anat, FS and SSW output)
 set din_dicom   = apmulti_data
