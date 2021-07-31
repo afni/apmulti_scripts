@@ -1,5 +1,5 @@
 
-tcsh -xef apmulti_scripts/scripts_main/do_00_init_tree.tcsh \
+tcsh -xef apmulti_scripts/for_biowulf/scripts_main/do_00_init_tree.tcsh \
         |& tee log_00_init.txt
 \mv log_00_init.txt apmulti_root/logs
 
