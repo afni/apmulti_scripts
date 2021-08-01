@@ -135,7 +135,7 @@ foreach run ( 1 )
     # and copy physio
     foreach ptype ( ECG Resp )
        set pin = ${ptype}_${NIH_physio}_00${irun}.txt
-       set pout = ${sid}_task-${task}-${tver}_run-${run}_physio-$ptype.txt
+       set pout = ${sid}_task-${task}_run-${run}_physio-$ptype.txt
        cp -v ${din_subj}/physio/${pin} ${dout_subj}/${pout}
     end
 end
