@@ -1,3 +1,4 @@
+#!/usr/bin/env tcsh
 
 # possibly init tree from apmulti_data.tgz using init_apmulti_tree.tcsh
 # (nothing else is required for entire setup and analysis)

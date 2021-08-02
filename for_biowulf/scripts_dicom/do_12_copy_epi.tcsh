@@ -1,3 +1,4 @@
+#!/usr/bin/env tcsh
 
 # copy DIMON output to NIFTI format with BIDS-ish naming
 # (and include physio)

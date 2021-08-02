@@ -1,3 +1,4 @@
+#!/usr/bin/env tcsh
 
 # convert DICOM data into AFNI EPI datasets
 # (and put physio files under 'physio' subdir)
