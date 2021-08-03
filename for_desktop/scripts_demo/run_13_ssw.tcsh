@@ -18,7 +18,7 @@ set subj          = sub-001
 set ses           = ses-01
 
 # upper directories
-set dir_inroot    = ../
+set dir_inroot    = ..
 set dir_log       = ${dir_inroot}/logs
 
 # --------------------------------------------------------------------------
