@@ -6,6 +6,8 @@
 # corresponding run_*tcsh script.
 
 # --------------------------------------------------------------------------
+# data and control variables
+# ---------------------------------------------------------------------------
 
 # labels
 set subj          = $1
@@ -20,21 +22,22 @@ set dir_basic     = ${dir_inroot}/data_00_basic
 set dir_fs        = ${dir_inroot}/data_12_fs
 set dir_ssw       = ${dir_inroot}/data_13_ssw
 
-# subject directories and data 
+# subject directories
 set sdir_basic    = ${dir_basic}/${subj}/${ses}
 set sdir_fs       = ${dir_fs}/${subj}/${ses}
 set sdir_suma     = ${sdir_fs}/SUMA
 set sdir_ssw      = ${dir_ssw}/${subj}/${ses}
 
-set dset_anat_00  = ${sdir_basic}/anat/${subj}_${ses}_mprage_run-1_T1w.nii.gz
-
 # --------------------------------------------------------------------------
 
-# check+report number of threads used---perhaps use up to 4, if available 
-# (because of "-parallel" option in recon-all command)
+# dataset inputs
+set dset_anat_00  = ${sdir_basic}/anat/${subj}_${ses}_mprage_run-1_T1w.nii.gz
 
-### could uncomment and set the N_threads to use (may be set elsewhere):
-# setenv OMP_NUM_THREADS = 4
+# thread usage
+# + check available N_threads and report what is being used
+# + consider using up to 4 threads, because of "-parallel" in recon-all
+# + N_threads may be set elsewhere; to set here, uncomment the following line:
+### setenv OMP_NUM_THREADS = 4
 
 set nthr_avail = `afni_system_check.py -check_all | \
                     grep "number of CPUs:" | awk '{print $4}'`
@@ -42,9 +45,9 @@ set nthr_using = `afni_check_omp`
 
 echo "++ INFO: Using ${nthr_avail} of available ${nthr_using} threads"
 
-# --------------------------------------------------------------------------
-
-# run main program
+# ---------------------------------------------------------------------------
+# run programs
+# ---------------------------------------------------------------------------
 
 \mkdir -p ${sdir_fs}
 
@@ -56,7 +59,8 @@ time recon-all                                                        \
     -subjid    "${subj}"                                              \
     -i         "${dset_anat_00}"
 
-# compress path: move output in */${subj}/${ses}/${subj}/ -> */${subj}/${ses}/
+# compress path (because of recon-all output dir naming): 
+#   move output from DIR/${subj}/${ses}/${subj}/* to DIR/${subj}/${ses}/*
 \mv ${sdir_fs}/${subj}/* ${sdir_fs}/.
 \rmdir ${sdir_fs}/${subj}
 

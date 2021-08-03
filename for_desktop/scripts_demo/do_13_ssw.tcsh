@@ -1,6 +1,6 @@
 #!/bin/tcsh
 
-# SSW: run @SSwarper to skullstrip (SS) and estimate a nonlinear warp (W).
+# SSW: run @SSwarper to skullstrip (SS) and estimate a nonlinear warp.
 
 # Process a single subj+ses pair.  Run this script via the
 # corresponding run_*tcsh script.
@@ -20,20 +20,22 @@ set dir_basic     = ${dir_inroot}/data_00_basic
 set dir_fs        = ${dir_inroot}/data_12_fs
 set dir_ssw       = ${dir_inroot}/data_13_ssw
 
-# subject directories and data 
+# subject directories
 set sdir_basic    = ${dir_basic}/${subj}/${ses}
 set sdir_fs       = ${dir_fs}/${subj}/${ses}
 set sdir_suma     = ${sdir_fs}/SUMA
 set sdir_ssw      = ${dir_ssw}/${subj}/${ses}
 
-set dset_anat_00  = ${sdir_basic}/anat/${subj}_${ses}_mprage_run-1_T1w.nii.gz
-
 # --------------------------------------------------------------------------
 
-# check+report number of threads used---perhaps use up to 16, if available
+# dataset inputs
+set dset_anat_00  = ${sdir_basic}/anat/${subj}_${ses}_mprage_run-1_T1w.nii.gz
 
-### could uncomment and set the N_threads to use (may be set elsewhere):
-# setenv OMP_NUM_THREADS = 16
+# thread usage
+# + check available N_threads and report what is being used
+# + consider using up to 16 threads (alignment programs are parallelized)
+# + N_threads may be set elsewhere; to set here, uncomment the following line:
+### setenv OMP_NUM_THREADS = 16
 
 set nthr_avail = `afni_system_check.py -check_all | \
                     grep "number of CPUs:" | awk '{print $4}'`
@@ -41,9 +43,9 @@ set nthr_using = `afni_check_omp`
 
 echo "++ INFO: Using ${nthr_avail} of available ${nthr_using} threads"
 
-# --------------------------------------------------------------------------
-
-# run main program
+# ---------------------------------------------------------------------------
+# run programs
+# ---------------------------------------------------------------------------
 
 time @SSwarper                                                        \
     -base    "${template}"                                            \

@@ -1,6 +1,6 @@
 #!/bin/tcsh
 
-# SSW: run @SSwarper to skullstrip (SS) and estimate a nonlinear warp (W).
+# SSW: run @SSwarper to skullstrip (SS) and estimate a nonlinear warp.
 
 # This script runs a corresponding do_*.tcsh script, for a given
 # subj+ses pair.  It could be adapted to loop over many subj+ses values.
