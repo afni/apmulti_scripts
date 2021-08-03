@@ -33,7 +33,7 @@ set ses           = $2
 set template      = MNI152_2009_template_SSW.nii.gz 
 
 # upper directories
-set dir_inroot    = ../
+set dir_inroot    = ..
 set dir_log       = ${dir_inroot}/logs
 set dir_basic     = ${dir_inroot}/data_00_basic
 set dir_fs        = ${dir_inroot}/data_12_fs
@@ -98,7 +98,7 @@ if( ${usetemp} && -d ${sdir_ssw} ) then
     echo "++ Copy from: ${sdir_ssw}"
     echo "          to: ${sdir_BW}"
     \mkdir -p ${sdir_BW}
-    \cp -pr   ${sdir_ssw}/* ${dir_BW}/.
+    \cp -pr   ${sdir_ssw}/* ${sdir_BW}/.
 endif
 # ---------------------------------------------------------------------------
 
