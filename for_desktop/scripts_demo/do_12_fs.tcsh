@@ -56,11 +56,15 @@ time recon-all                                                        \
     -subjid    "${subj}"                                              \
     -i         "${dset_anat_00}"
 
+# compress path: move output in */${subj}/${ses}/${subj}/ -> */${subj}/${ses}/
+\mv ${sdir_fs}/${subj}/* ${sdir_fs}/.
+\rmdir ${sdir_fs}/${subj}
+
 @SUMA_Make_Spec_FS                                                    \
     -fs_setup                                                         \
     -NIFTI                                                            \
     -sid       "${subj}"                                              \
-    -fspath    "${sdir_fs}/${subj}"
+    -fspath    "${sdir_fs}"
 
 echo "++ FINISHED FS"
 
