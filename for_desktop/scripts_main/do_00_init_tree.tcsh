@@ -85,7 +85,7 @@ nifti_tool -rm_ext ALL -overwrite -infile $dout_subj/anat/$anat_out
 
 # and copy a corresponding png file
 cp ${din_extras}/anat_02_anon.face.sag.png \
-   ${subj}_${ses}_mprage_run-1_T1w_face-sag.png
+   $dout_subj/anat/${subj}_${ses}_mprage_run-1_T1w_face-sag.png
 
 # ----------------------------------------------------------------------
 # apmulti_demo: copy SSW and SUMA results
