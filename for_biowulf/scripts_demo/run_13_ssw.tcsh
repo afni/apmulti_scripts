@@ -1,6 +1,6 @@
 #!/bin/tcsh
 
-# FS: run FreeSurfer's recon-all and AFNI's @SUMA_Make_Spec_FS.
+# SSW: run @SSwarper to skullstrip (SS) and estimate a nonlinear warp.
 #  -> the Biowulf version
 
 # This script runs a corresponding do_*.tcsh script, for a given
@@ -12,7 +12,7 @@
 # --------------------------------------------------------------------------
 
 # specify script to execute
-set cmd           = 12_fs
+set cmd           = 13_ssw
 
 # labels
 set subj          = sub-001
@@ -45,11 +45,11 @@ echo "++ And start swarming"
 
 swarm                                                              \
     -f ${scr_swarm}                                                \
-    --partition=norm                                               \
-    --threads-per-process=4                                        \
+    --partition=norm,quick                                         \
+    --threads-per-process=16                                       \
     --gb-per-process=10                                            \
-    --time=12:00:00                                                \
-    --gres=lscratch:10                                             \
+    --time=03:59:00                                                \
+    --gres=lscratch:3                                              \
     --logdir=${dir_log}                                            \
     --job-name=job_${cmd}                                          \
     --merge-output                                                 \
