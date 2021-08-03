@@ -17,6 +17,9 @@ module load afni
 # set N_threads for OpenMP
 # + consider using up to 16 threads (alignment programs are parallelized)
 setenv OMP_NUM_THREADS = $SLURM_CPUS_PER_TASK
+
+# initial exit code; we don't exit at fail, to copy partial results back
+set ecode = 0
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
@@ -77,7 +80,16 @@ time @SSwarper                                                        \
     -input   "${dset_anat_00}"                                        \
     -odir    "${sdir_ssw}"
 
+if ( ${status} ) then
+    set ecode = 1
+    goto COPY_AND_EXIT
+endif
+
 echo "++ FINISHED SSW"
+
+# ---------------------------------------------------------------------------
+
+COPY_AND_EXIT:
 
 # ----------------------------- biowulf-cmd --------------------------------
 # copy back from /lscratch to "real" location
@@ -90,5 +102,5 @@ if( ${usetemp} && -d ${sdir_ssw} ) then
 endif
 # ---------------------------------------------------------------------------
 
-exit 0
+exit $ecode
 

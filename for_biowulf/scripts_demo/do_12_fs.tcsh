@@ -18,6 +18,9 @@ source $FREESURFER_HOME/SetUpFreeSurfer.csh
 # set N_threads for OpenMP
 # + consider using up to 4 threads, because of "-parallel" in recon-all
 setenv OMP_NUM_THREADS = $SLURM_CPUS_PER_TASK
+
+# initial exit code; we don't exit at fail, to copy partial results back
+set ecode = 0
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
@@ -82,6 +85,11 @@ time recon-all                                                        \
     -subjid    "${subj}"                                              \
     -i         "${dset_anat_00}"
 
+if ( ${status} ) then
+    set ecode = 1
+    goto COPY_AND_EXIT
+endif
+
 # compress path (because of recon-all output dir naming): 
 #   move output from DIR/${subj}/${ses}/${subj}/* to DIR/${subj}/${ses}/*
 \mv    ${sdir_fs}/${subj}/* ${sdir_fs}/.
@@ -93,7 +101,16 @@ time recon-all                                                        \
     -sid       "${subj}"                                              \
     -fspath    "${sdir_fs}"
 
+if ( ${status} ) then
+    set ecode = 1
+    goto COPY_AND_EXIT
+endif
+
 echo "++ FINISHED FS"
+
+# ---------------------------------------------------------------------------
+
+COPY_AND_EXIT:
 
 # ----------------------------- biowulf-cmd --------------------------------
 # copy back from /lscratch to "real" location
@@ -106,5 +123,5 @@ if( ${usetemp} && -d ${sdir_fs} ) then
 endif
 # ---------------------------------------------------------------------------
 
-exit 0
+exit ${ecode}
 
