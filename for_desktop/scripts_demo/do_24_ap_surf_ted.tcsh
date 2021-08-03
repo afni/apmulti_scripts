@@ -26,7 +26,7 @@ set dir_basic     = ${dir_inroot}/data_00_basic
 set dir_fs        = ${dir_inroot}/data_12_fs
 set dir_ssw       = ${dir_inroot}/data_13_ssw
 
-# subject directories and data 
+# subject directories
 set sdir_basic    = ${dir_basic}/${subj}/${ses}
 set sdir_fs       = ${dir_fs}/${subj}/${ses}
 set sdir_suma     = ${sdir_fs}/SUMA
@@ -58,7 +58,7 @@ set cen_motion    = 0.2
 set cen_outliers  = 0.05
 
 # ---------------------------------------------------------------------------
-# run afni_proc.py
+# run programs
 # ---------------------------------------------------------------------------
 
 # ME:
