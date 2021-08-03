@@ -39,7 +39,7 @@ set dset_anat_00  = ${sdir_basic}/anat/${subj}_${ses}_mprage_run-1_T1w.nii.gz
 # + check available N_threads and report what is being used
 # + consider using up to 4 threads, because of "-parallel" in recon-all
 # + N_threads may be set elsewhere; to set here, uncomment the following line:
-### setenv OMP_NUM_THREADS = 4
+### setenv OMP_NUM_THREADS 4
 
 set nthr_avail = `afni_system_check.py -check_all | \
                       grep "number of CPUs:" | awk '{print $4}'`

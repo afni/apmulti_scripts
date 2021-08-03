@@ -16,7 +16,7 @@ module load afni
 
 # set N_threads for OpenMP
 # + consider using up to 16 threads (alignment programs are parallelized)
-setenv OMP_NUM_THREADS = $SLURM_CPUS_PER_TASK
+setenv OMP_NUM_THREADS $SLURM_CPUS_PER_TASK
 
 # initial exit code; we don't exit at fail, to copy partial results back
 set ecode = 0

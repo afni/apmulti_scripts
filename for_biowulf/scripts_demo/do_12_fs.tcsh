@@ -17,7 +17,7 @@ source $FREESURFER_HOME/SetUpFreeSurfer.csh
 
 # set N_threads for OpenMP
 # + consider using up to 4 threads, because of "-parallel" in recon-all
-setenv OMP_NUM_THREADS = $SLURM_CPUS_PER_TASK
+setenv OMP_NUM_THREADS $SLURM_CPUS_PER_TASK
 
 # initial exit code; we don't exit at fail, to copy partial results back
 set ecode = 0
