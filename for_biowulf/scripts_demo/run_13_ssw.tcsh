@@ -20,13 +20,17 @@ set ses           = ses-01
 
 # upper directories
 set dir_scr       = $PWD
-set dir_inroot    = ../
+set dir_inroot    = ..
 set dir_log       = ${dir_inroot}/logs
+set dir_swarm     = ${dir_inroot}/swarms
 
 # running
-set scr_swarm     = ${dir_log}/swarm_${cmd}.txt
+set scr_swarm     = ${dir_swarm}/swarm_${cmd}.txt
 
 # --------------------------------------------------------------------------
+
+\mkdir -p ${dir_swarm}
+\mkdir -p ${dir_log}
 
 # clear away older swarm script 
 if ( -e ${scr_swarm} ) then
@@ -41,7 +45,7 @@ cat <<EOF >> ${scr_swarm}
 tcsh -xf ${dir_scr}/do_${cmd}.tcsh  ${subj} ${ses} |& tee ${dir_log}/log_${cmd}_${subj}_${ses}.txt
 EOF
 
-echo "++ And start swarming"
+echo "++ And start swarming: ${scr_swarm}"
 
 swarm                                                              \
     -f ${scr_swarm}                                                \
