@@ -1,11 +1,29 @@
 #!/bin/tcsh
 
 # FS: run FreeSurfer's recon-all and AFNI's @SUMA_Make_Spec_FS.
+#  -> the Biowulf version.
+
+# Note: (biowulf) when starting sinteractive, sbatch or swarm, allocate
+#       /lscratch space of size "SIZE" GB with: '--gres=lscratch:SIZE'
 
 # Process a single subj+ses pair.  Run this script via the
 # corresponding run_*tcsh script.
 
-# --------------------------------------------------------------------------
+# ----------------------------- biowulf-cmd ---------------------------------
+# load modules
+source /etc/profile.d/modules.csh
+module load afni freesurfer
+source $FREESURFER_HOME/SetUpFreeSurfer.csh
+
+# set N_threads for OpenMP
+# + consider using up to 4 threads, because of "-parallel" in recon-all
+setenv OMP_NUM_THREADS $SLURM_CPUS_PER_TASK
+
+# initial exit code; we don't exit at fail, to copy partial results back
+set ecode = 0
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
 # data and control variables
 # ---------------------------------------------------------------------------
 
@@ -35,17 +53,23 @@ set dset_anat_00  = ${sdir_basic}/anat/${subj}_${ses}_mprage_run-1_T1w.nii.gz
 
 # control variables
 
-# thread usage
-# + check available N_threads and report what is being used
-# + consider using up to 4 threads, because of "-parallel" in recon-all
-# + N_threads may be set elsewhere; to set here, uncomment the following line:
-### setenv OMP_NUM_THREADS 4
-
+# check available N_threads and report what is being used
 set nthr_avail = `afni_system_check.py -check_all | \
                       grep "number of CPUs:" | awk '{print $4}'`
 set nthr_using = `afni_check_omp`
 
 echo "++ INFO: Using ${nthr_avail} of available ${nthr_using} threads"
+
+# ----------------------------- biowulf-cmd --------------------------------
+# try to use /lscratch for speed 
+if ( -d /lscratch/$SLURM_JOBID ) then
+    set usetemp  = 1
+    set sdir_BW  = ${sdir_fs}
+    set sdir_fs  = /lscratch/$SLURM_JOBID/${subj}_${ses}
+else
+    set usetemp  = 0
+endif
+# ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
 # run programs
@@ -61,9 +85,14 @@ time recon-all                                                        \
     -subjid    "${subj}"                                              \
     -i         "${dset_anat_00}"
 
+if ( ${status} ) then
+    set ecode = 1
+    goto COPY_AND_EXIT
+endif
+
 # compress path (because of recon-all output dir naming): 
 #   move output from DIR/${subj}/${ses}/${subj}/* to DIR/${subj}/${ses}/*
-\mv ${sdir_fs}/${subj}/* ${sdir_fs}/.
+\mv    ${sdir_fs}/${subj}/* ${sdir_fs}/.
 \rmdir ${sdir_fs}/${subj}
 
 @SUMA_Make_Spec_FS                                                    \
@@ -72,7 +101,27 @@ time recon-all                                                        \
     -sid       "${subj}"                                              \
     -fspath    "${sdir_fs}"
 
+if ( ${status} ) then
+    set ecode = 1
+    goto COPY_AND_EXIT
+endif
+
 echo "++ FINISHED FS"
 
-exit 0
+# ---------------------------------------------------------------------------
+
+COPY_AND_EXIT:
+
+# ----------------------------- biowulf-cmd --------------------------------
+# copy back from /lscratch to "real" location
+if( ${usetemp} && -d ${sdir_fs} ) then
+    echo "++ Used /lscratch"
+    echo "++ Copy from: ${sdir_fs}"
+    echo "          to: ${sdir_BW}"
+    \mkdir -p ${sdir_BW}
+    \cp -pr   ${sdir_fs}/* ${dir_BW}/.
+endif
+# ---------------------------------------------------------------------------
+
+exit ${ecode}
 
