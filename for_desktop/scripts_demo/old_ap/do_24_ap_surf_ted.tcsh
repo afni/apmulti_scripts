@@ -1,55 +1,42 @@
 #!/usr/bin/env tcsh
 
-# AP: basic, multiecho rest, with blip up/down correction and
-# tedana.py, processing on a *surface*
+# ---------------------------------------------------------------------------
+# basic, single echo rest, but more like example 13
+# ---------------------------------------------------------------------------
 
 # Note: The tedana.py called by this script for combine_method = 'OC_tedort'
 #       requires using Python 2.7.
-
-# Process a single subj+ses pair.  Run this script via the
-# corresponding run_*tcsh script.
 
 # ---------------------------------------------------------------------------
 # data and control variables
 # ---------------------------------------------------------------------------
 
 # labels
-set subj          = $1
-set ses           = $2
+set label         = 4.ex13.surf
+set isubj         = NvR_S02
 
-set template      = MNI152_2009_template_SSW.nii.gz 
-
-# upper directories
-set dir_inroot    = ../
-set dir_log       = ${dir_inroot}/logs
-set dir_basic     = ${dir_inroot}/data_00_basic
-set dir_fs        = ${dir_inroot}/data_12_fs
-set dir_ssw       = ${dir_inroot}/data_13_ssw
-
-# subject directories and data 
-set sdir_basic    = ${dir_basic}/${subj}/${ses}
-set sdir_fs       = ${dir_fs}/${subj}/${ses}
-set sdir_suma     = ${sdir_fs}/SUMA
-set sdir_ssw      = ${dir_ssw}/${subj}/${ses}
-
-# --------------------------------------------------------------------------
+# directories
+set dir_inroot    = ../NvR_S02.test
+set dir_ssw       = ${dir_inroot}/ssw_results_NvR_S02
+set dir_epi       = ${dir_inroot}/dimon.output
+set dir_suma      = ${dir_inroot}/SUMA
 
 # dataset inputs
-set dsets_epi_me  = ( ${dir_epi}/epi.r11.rest_chan_*+orig.HEAD )  # UPDATE
+set anat_cp       = ${dir_ssw}/anatSS.${isubj}.nii
+set anat_skull    = ${dir_ssw}/anatU.${isubj}.nii
+
+set roi_all_2009  = ${dir_suma}/aparc.a2009s+aseg_REN_all.nii.gz
+set roi_FSvent    = ${dir_suma}/fs_ap_latvent.nii.gz
+set roi_FSWe      = ${dir_suma}/fs_ap_wm.nii.gz
+
+set surf_anat     = ${dir_suma}/sub_001_SurfVol.nii
+set surf_specs    = ( ${dir_suma}/std.141.sub_001_?h.spec )
+
+set epi_forward   = "${dir_epi}/epi.r04.blip.fwd.chan2+orig[0]"
+set epi_reverse   = "${dir_epi}/epi.r03.blip+orig[0]"
+set dsets_epi_me  = ( ${dir_epi}/epi.r11.rest_chan_*+orig.HEAD )
 set me_times      = ( 12.5 27.6 42.7 )
 
-set epi_forward   = "${dir_epi}/epi.r04.blip.fwd.chan2+orig[0]"   # UPDATE
-set epi_reverse   = "${dir_epi}/epi.r03.blip+orig[0]"             # UPDATE
-
-set anat_cp       = ${sdir_ssw}/anatSS.${subj}.nii
-set anat_skull    = ${sdir_ssw}/anatU.${subj}.nii
-
-set surf_anat     = ${sdir_suma}/${subj}_SurfVol.nii
-set surf_specs    = ( ${sdir_suma}/std.141.${subj}_?h.spec )
-
-set roi_all_2009  = ${sdir_suma}/aparc.a2009s+aseg_REN_all.nii.gz
-set roi_FSvent    = ${sdir_suma}/fs_ap_latvent.nii.gz
-set roi_FSWe      = ${sdir_suma}/fs_ap_wm.nii.gz
 
 # control variables
 set nt_rm         = 4
@@ -57,16 +44,15 @@ set blur_size     = 8
 set cen_motion    = 0.2
 set cen_outliers  = 0.05
 
+# ME:
+#   - -dsets_me_run, -echo_times -combine_method
+#   - mask combine blur
+
 # ---------------------------------------------------------------------------
 # run afni_proc.py
 # ---------------------------------------------------------------------------
-
-# ME:
-#   - -dsets_me_run, -echo_times -combine_method -combine_tedort_reject_midk 
-#   - mask combine blur
-
 afni_proc.py                                                            \
-     -subj_id                  ${subj}                                  \
+     -subj_id                  s.${label}                               \
      -blocks despike tshift align volreg mask combine surf blur scale   \
          regress                                                        \
      -radial_correlate_blocks  tcat volreg                              \

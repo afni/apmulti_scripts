@@ -1,40 +1,49 @@
 #!/usr/bin/env tcsh
 
-# ---------------------------------------------------------------------------
-# basic, single echo rest, but more like example 13
-# ---------------------------------------------------------------------------
+# AP: basic, multiecho rest, but more like example 13
+
+# Process a single subj+ses pair.  Run this script via the
+# corresponding run_*tcsh script.
 
 # ---------------------------------------------------------------------------
 # data and control variables
 # ---------------------------------------------------------------------------
 
 # labels
-set label         = 1.ex13.v
-set isubj         = NvR_S02
+set subj          = $1
+set ses           = $2
 
-# directories
-set dir_inroot    = ../NvR_S02.test
-set dir_ssw       = ${dir_inroot}/ssw_results_NvR_S02
-set dir_epi       = ${dir_inroot}/dimon.output
-set dir_suma      = ${dir_inroot}/SUMA
+set template      = MNI152_2009_template_SSW.nii.gz 
+
+# upper directories
+set dir_inroot    = ../
+set dir_log       = ${dir_inroot}/logs
+set dir_basic     = ${dir_inroot}/data_00_basic
+set dir_fs        = ${dir_inroot}/data_12_fs
+set dir_ssw       = ${dir_inroot}/data_13_ssw
+
+# subject directories and data 
+set sdir_basic    = ${dir_basic}/${subj}/${ses}
+set sdir_fs       = ${dir_fs}/${subj}/${ses}
+set sdir_suma     = ${sdir_fs}/SUMA
+set sdir_ssw      = ${dir_ssw}/${subj}/${ses}
+
+# --------------------------------------------------------------------------
 
 # dataset inputs
-set anat_cp       = ${dir_ssw}/anatSS.${isubj}.nii
-set anat_skull    = ${dir_ssw}/anatU.${isubj}.nii
-
-set roi_all_2009  = ${dir_suma}/aparc.a2009s+aseg_REN_all.nii.gz
-set roi_FSvent    = ${dir_suma}/fs_ap_latvent.nii.gz
-set roi_FSWe      = ${dir_suma}/fs_ap_wm.nii.gz
-
-set dsets_NL_warp = ( ${dir_ssw}/anatQQ.${isubj}.nii         \
-                      ${dir_ssw}/anatQQ.${isubj}.aff12.1D    \
-                      ${dir_ssw}/anatQQ.${isubj}_WARP.nii  )
-
-
-set dsets_epi_me  = ( ${dir_epi}/epi.r11.rest_chan_*+orig.HEAD )
+set dsets_epi_me  = ( ${dir_epi}/epi.r11.rest_chan_*+orig.HEAD )  # UPDATE
 set me_times      = ( 12.5 27.6 42.7 )
 
-set template      = MNI152_2009_template_SSW.nii.gz
+set anat_cp       = ${sdir_ssw}/anatSS.${subj}.nii
+set anat_skull    = ${sdir_ssw}/anatU.${subj}.nii
+
+set dsets_NL_warp = ( ${sdir_ssw}/anatQQ.${subj}.nii         \
+                      ${sdir_ssw}/anatQQ.${subj}.aff12.1D    \
+                      ${sdir_ssw}/anatQQ.${subj}_WARP.nii  )
+
+set roi_all_2009  = ${sdir_suma}/aparc.a2009s+aseg_REN_all.nii.gz
+set roi_FSvent    = ${sdir_suma}/fs_ap_latvent.nii.gz
+set roi_FSWe      = ${sdir_suma}/fs_ap_wm.nii.gz
 
 # control variables
 set nt_rm         = 4
@@ -43,15 +52,16 @@ set final_dxyz    = 3      # can test against inputs
 set cen_motion    = 0.2
 set cen_outliers  = 0.05
 
+# ---------------------------------------------------------------------------
+# run afni_proc.py
+# ---------------------------------------------------------------------------
+
 # ME:
 #   - -dsets_me_run, -echo_times -combine_method
 #   - mask combine blur
 
-# ---------------------------------------------------------------------------
-# run afni_proc.py
-# ---------------------------------------------------------------------------
 afni_proc.py                                                            \
-     -subj_id                  s.${label}                               \
+     -subj_id                  ${subj}                                  \
      -blocks despike tshift align tlrc volreg mask combine blur scale   \
          regress                                                        \
      -radial_correlate_blocks  tcat volreg                              \
