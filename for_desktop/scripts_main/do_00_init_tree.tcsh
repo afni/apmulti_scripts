@@ -18,7 +18,7 @@ set ses   = ses-01
 set din_scripts = apmulti_scripts/for_desktop
 
 # contains DICOM images and extras (anat, FS and SSW output)
-set din_dicom   = apmulti_data
+set din_dicom   = apmulti_data/$subj/$ses
 set din_extras  = $din_dicom/mr_0010_proc
 
 # root of tree (to possibly distribute)
