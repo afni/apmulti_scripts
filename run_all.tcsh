@@ -2,7 +2,7 @@
 
 # possibly init tree from apmulti_data.tgz using init_apmulti_tree.tcsh
 # (nothing else is required for entire setup and analysis)
-tcsh -x ../git/apmulti_scripts/init_apmulti_tree.tcsh apmulti_data.tgz \
+tcsh -x git/apmulti_scripts/init_apmulti_tree.tcsh apmulti_data.tgz \
         |& tee out.init_tree.txt
 
 # now get the script repo and initialize the sub-trees
