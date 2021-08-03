@@ -5,7 +5,7 @@
 # Process a single subj+ses pair.  Run this script via the
 # corresponding run_*tcsh script.
 
-# --------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 # data and control variables
 # ---------------------------------------------------------------------------
 
@@ -16,7 +16,7 @@ set ses           = $2
 set template      = MNI152_2009_template_SSW.nii.gz 
 
 # upper directories
-set dir_inroot    = ../
+set dir_inroot    = ..
 set dir_log       = ${dir_inroot}/logs
 set dir_basic     = ${dir_inroot}/data_00_basic
 set dir_fs        = ${dir_inroot}/data_12_fs
@@ -35,8 +35,7 @@ set dset_anat_00  = ${sdir_basic}/anat/${subj}_${ses}_mprage_run-1_T1w.nii.gz
 
 # control variables
 
-# thread usage
-# + check available N_threads and report what is being used
+# check available N_threads and report what is being used
 # + consider using up to 4 threads, because of "-parallel" in recon-all
 # + N_threads may be set elsewhere; to set here, uncomment the following line:
 ### setenv OMP_NUM_THREADS 4
@@ -63,7 +62,7 @@ time recon-all                                                        \
 
 # compress path (because of recon-all output dir naming): 
 #   move output from DIR/${subj}/${ses}/${subj}/* to DIR/${subj}/${ses}/*
-\mv ${sdir_fs}/${subj}/* ${sdir_fs}/.
+\mv    ${sdir_fs}/${subj}/* ${sdir_fs}/.
 \rmdir ${sdir_fs}/${subj}
 
 @SUMA_Make_Spec_FS                                                    \
