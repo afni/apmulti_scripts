@@ -2,8 +2,8 @@
 
 # FS: run FreeSurfer's recon-all and AFNI's @SUMA_Make_Spec_FS.
 
-# Process a single subj+ses pair.  Run this script via the
-# corresponding run_*tcsh script.
+# Process a single subj+ses pair.  Run this script in
+# apmulti_demo/scripts/, via the corresponding run_*tcsh script.
 
 # ---------------------------------------------------------------------------
 # data and control variables
@@ -16,14 +16,7 @@ set ses           = $2
 set template      = MNI152_2009_template_SSW.nii.gz 
 
 # upper directories
-if ( "${PWD:t}" == "scripts" ) then
-    cd ..
-    set dir_inroot = $PWD
-    cd -
-else
-    echo "** Need to run from scripts/ directory"
-    exit 1
-endif
+set dir_inroot    = ${PWD:h}                        # one dir above scripts/
 set dir_log       = ${dir_inroot}/logs
 set dir_basic     = ${dir_inroot}/data_00_basic
 set dir_fs        = ${dir_inroot}/data_12_fs
