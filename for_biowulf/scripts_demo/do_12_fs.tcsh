@@ -1,13 +1,11 @@
 #!/bin/tcsh
 
 # FS: run FreeSurfer's recon-all and AFNI's @SUMA_Make_Spec_FS.
-#  -> the Biowulf version.
-
-# Note: (biowulf) when starting sinteractive, sbatch or swarm, allocate
-#       /lscratch space of size "SIZE" GB with: '--gres=lscratch:SIZE'
 
 # Process a single subj+ses pair.  Run this script via the
 # corresponding run_*tcsh script.
+
+# This is a Biowulf script.  Run it via swarm (see partner run*.tcsh).
 
 # ----------------------------- biowulf-cmd ---------------------------------
 # load modules
