@@ -16,7 +16,14 @@ set ses           = $2
 set template      = MNI152_2009_template_SSW.nii.gz 
 
 # upper directories
-set dir_inroot    = ..
+if ( "${PWD:t}" == "scripts" ) then
+    cd ..
+    set dir_inroot = $PWD
+    cd -
+else
+    echo "** Need to run from scripts/ directory"
+    exit 1
+endif
 set dir_log       = ${dir_inroot}/logs
 set dir_basic     = ${dir_inroot}/data_00_basic
 set dir_fs        = ${dir_inroot}/data_12_fs
