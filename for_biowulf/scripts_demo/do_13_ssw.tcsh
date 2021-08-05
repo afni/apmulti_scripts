@@ -21,28 +21,43 @@ set ecode = 0
 # ---------------------------------------------------------------------------
 
 # ---------------------------------------------------------------------------
-# data and control variables
+# top level definitions (constant across demo)
 # ---------------------------------------------------------------------------
 
 # labels
-set subj          = $1
-set ses           = $2
+set subj           = $1
+set ses            = $2
 
-set template      = MNI152_2009_template_SSW.nii.gz 
+set template       = MNI152_2009_template_SSW.nii.gz 
 
 # upper directories
-set dir_inroot    = ${PWD:h}                        # one dir above scripts/
-set dir_log       = ${dir_inroot}/logs
-set dir_basic     = ${dir_inroot}/data_00_basic
-set dir_fs        = ${dir_inroot}/data_12_fs
-set dir_ssw       = ${dir_inroot}/data_13_ssw
+set dir_inroot     = ${PWD:h}                        # one dir above scripts/
+set dir_log        = ${dir_inroot}/logs
+set dir_basic      = ${dir_inroot}/data_00_basic
+set dir_fs         = ${dir_inroot}/data_12_fs
+set dir_ssw        = ${dir_inroot}/data_13_ssw
+
+set dir_ap_se      = ${dir_inroot}/data_20_ap_se
+set dir_ap_me      = ${dir_inroot}/data_21_ap_me
+set dir_ap_me_b    = ${dir_inroot}/data_22_ap_me_b
+set dir_ap_me_bt   = ${dir_inroot}/data_23_ap_me_bt
+set dir_ap_me_bts  = ${dir_inroot}/data_23_ap_me_bts
 
 # subject directories
-set sdir_basic    = ${dir_basic}/${subj}/${ses}
-set sdir_fs       = ${dir_fs}/${subj}/${ses}
-set sdir_suma     = ${sdir_fs}/SUMA
-set sdir_ssw      = ${dir_ssw}/${subj}/${ses}
+set sdir_basic     = ${dir_basic}/${subj}/${ses}
+set sdir_epi       = ${sdir_basic}/func
+set sdir_fs        = ${dir_fs}/${subj}/${ses}
+set sdir_suma      = ${sdir_fs}/SUMA
+set sdir_ssw       = ${dir_ssw}/${subj}/${ses}
 
+set sdir_ap_se     = ${dir_ap_se}/${subj}/${ses}
+set sdir_ap_me     = ${dir_ap_me}/${subj}/${ses}
+set sdir_ap_me_b   = ${dir_ap_me_b}/${subj}/${ses}
+set sdir_ap_me_bt  = ${dir_ap_me_bt}/${subj}/${ses}
+set sdir_ap_me_bts = ${dir_ap_me_bts}/${subj}/${ses}
+
+# --------------------------------------------------------------------------
+# data and control variables
 # --------------------------------------------------------------------------
 
 # dataset inputs
