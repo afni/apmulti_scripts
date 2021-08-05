@@ -51,7 +51,7 @@ echo "++ And start swarming: ${scr_swarm}"
 swarm                                                              \
     -f ${scr_swarm}                                                \
     --partition=norm,quick                                         \
-    --threads-per-process=4                                        \
+    --threads-per-process=8                                        \
     --gb-per-process=10                                            \
     --time=03:59:00                                                \
     --gres=lscratch:10                                             \
