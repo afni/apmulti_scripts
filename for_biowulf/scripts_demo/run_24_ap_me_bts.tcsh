@@ -54,7 +54,7 @@ swarm                                                              \
     --threads-per-process=4                                        \
     --gb-per-process=10                                            \
     --time=03:59:00                                                \
-    --gres=lscratch:3                                              \
+    --gres=lscratch:10                                             \
     --logdir=${dir_log}                                            \
     --job-name=job_${cmd}                                          \
     --merge-output                                                 \
