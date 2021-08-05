@@ -66,7 +66,6 @@ set sdir_ap_me_bts = ${dir_ap_me_bts}/${subj}/${ses}
 
 # dataset inputs
 set this_ap       = ${sdir_ap_me_bts}
-set ap_cmd        = ${this_ap}/ap.cmd.${subj}
 
 set dsets_epi_me  = ( ${sdir_epi}/${subj}_${ses}_task-rest_*_echo-?_bold.nii* )
 set me_times      = ( 12.5 27.6 42.7 )
@@ -104,6 +103,8 @@ endif
 # ---------------------------------------------------------------------------
 # run programs
 # ---------------------------------------------------------------------------
+
+set ap_cmd        = ${this_ap}/ap.cmd.${subj}
 
 \mkdir -p ${this_ap}
 
