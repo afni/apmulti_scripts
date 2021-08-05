@@ -26,7 +26,7 @@ set dir_ap_se      = ${dir_inroot}/data_20_ap_se
 set dir_ap_me      = ${dir_inroot}/data_21_ap_me
 set dir_ap_me_b    = ${dir_inroot}/data_22_ap_me_b
 set dir_ap_me_bt   = ${dir_inroot}/data_23_ap_me_bt
-set dir_ap_me_bts  = ${dir_inroot}/data_23_ap_me_bts
+set dir_ap_me_bts  = ${dir_inroot}/data_24_ap_me_bts
 
 # subject directories
 set sdir_basic     = ${dir_basic}/${subj}/${ses}
