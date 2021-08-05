@@ -63,6 +63,8 @@ set sdir_ap_me_bts = ${dir_ap_me_bts}/${subj}/${ses}
 # data and control variables
 # --------------------------------------------------------------------------
 
+setenv AFNI_COMPRESSOR GZIP
+
 # dataset inputs
 set this_ap       = ${sdir_ap_me_bt}
 
