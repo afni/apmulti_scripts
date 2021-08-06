@@ -63,7 +63,7 @@ set sdir_ap_me_bts = ${dir_ap_me_bts}/${subj}/${ses}
 setenv AFNI_COMPRESSOR GZIP
 
 # dataset inputs
-set this_ap       = ${sdir_ap_me}
+set sdir_this_ap  = ${sdir_ap_me}                    # pick AP dir (and cmd)
 
 set dsets_epi_me  = ( ${sdir_epi}/${subj}_${ses}_task-rest_*_echo-?_bold.nii* )
 set me_times      = ( 12.5 27.6 42.7 )
@@ -91,8 +91,8 @@ set cen_outliers  = 0.05
 # try to use /lscratch for speed 
 if ( -d /lscratch/$SLURM_JOBID ) then
     set usetemp  = 1
-    set sdir_BW  = ${this_ap}
-    set this_ap  = /lscratch/$SLURM_JOBID/${subj}_${ses}
+    set sdir_BW  = ${sdir_this_ap}
+    set sdir_this_ap  = /lscratch/$SLURM_JOBID/${subj}_${ses}
 else
     set usetemp  = 0
 endif
@@ -101,9 +101,9 @@ endif
 # run programs
 # ---------------------------------------------------------------------------
 
-set ap_cmd = ${this_ap}/ap.cmd.${subj}
+set ap_cmd = ${sdir_this_ap}/ap.cmd.${subj}
 
-\mkdir -p ${this_ap}
+\mkdir -p ${sdir_this_ap}
 
 # write AP command to file
 cat <<EOF >! ${ap_cmd}
@@ -164,10 +164,10 @@ if ( ${status} ) then
     goto COPY_AND_EXIT
 endif
 
-cd ${this_ap}
+cd ${sdir_this_ap}
 
 # execute AP command to make processing script
-tcsh -xef ${ap_cmd}
+tcsh -xef ${ap_cmd} |& tee output.ap.cmd.${subj}
 
 if ( ${status} ) then
     set ecode = 1
@@ -175,7 +175,7 @@ if ( ${status} ) then
 endif
 
 # execute the proc script, saving text info
-tcsh -xef proc.${subj} |& tee output.proc.${subj}
+time tcsh -xef proc.${subj} |& tee output.proc.${subj}
 
 if ( ${status} ) then
     set ecode = 1
@@ -191,12 +191,12 @@ COPY_AND_EXIT:
 # ----------------------------- biowulf-cmd --------------------------------
 
 # copy back from /lscratch to "real" location
-if( ${usetemp} && -d ${this_ap} ) then
+if( ${usetemp} && -d ${sdir_this_ap} ) then
     echo "++ Used /lscratch"
-    echo "++ Copy from: ${this_ap}"
+    echo "++ Copy from: ${sdir_this_ap}"
     echo "          to: ${sdir_BW}"
     \mkdir -p ${sdir_BW}
-    \cp -pr   ${this_ap}/* ${sdir_BW}/.
+    \cp -pr   ${sdir_this_ap}/* ${sdir_BW}/.
 endif
 
 # ---------------------------------------------------------------------------
