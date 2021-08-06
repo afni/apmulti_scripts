@@ -45,8 +45,10 @@ set sdir_ap_me_bts = ${dir_ap_me_bts}/${subj}/${ses}
 # data and control variables
 # --------------------------------------------------------------------------
 
+setenv AFNI_COMPRESSOR GZIP
+
+# dataset inputs
 set this_ap       = ${sdir_ap_se}
-set ap_cmd        = ${this_ap}/ap.cmd.${subj}
 
 set dsets_epi     = ( ${sdir_epi}/${subj}_${ses}_task-rest_*_echo-2_bold.nii* )
 
@@ -71,6 +73,8 @@ set cen_outliers  = 0.05
 # ---------------------------------------------------------------------------
 # run programs
 # ---------------------------------------------------------------------------
+
+set ap_cmd = ${this_ap}/ap.cmd.${subj}
 
 \mkdir -p ${this_ap}
 
