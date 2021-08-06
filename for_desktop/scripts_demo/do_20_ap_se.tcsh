@@ -48,7 +48,7 @@ set sdir_ap_me_bts = ${dir_ap_me_bts}/${subj}/${ses}
 setenv AFNI_COMPRESSOR GZIP
 
 # dataset inputs
-set this_ap       = ${sdir_ap_se}
+set sdir_this_ap  = ${sdir_ap_se}                    # pick AP dir (and cmd)
 
 set dsets_epi     = ( ${sdir_epi}/${subj}_${ses}_task-rest_*_echo-2_bold.nii* )
 
@@ -74,9 +74,9 @@ set cen_outliers  = 0.05
 # run programs
 # ---------------------------------------------------------------------------
 
-set ap_cmd = ${this_ap}/ap.cmd.${subj}
+set ap_cmd = ${sdir_this_ap}/ap.cmd.${subj}
 
-\mkdir -p ${this_ap}
+\mkdir -p ${sdir_this_ap}
 
 # write AP command to file
 cat <<EOF >! ${ap_cmd}
@@ -121,13 +121,13 @@ afni_proc.py                                                            \
 
 EOF
 
-cd ${this_ap}
+cd ${sdir_this_ap}
 
 # execute AP command to make processing script
-tcsh -xef ${ap_cmd}
+tcsh -xef ${ap_cmd} |& tee output.ap.cmd.${subj}
 
 # execute the proc script, saving text info
-tcsh -xef proc.${subj} |& tee output.proc.${subj}
+time tcsh -xef proc.${subj} |& tee output.proc.${subj}
 
 echo "++ FINISHED AP"
 
