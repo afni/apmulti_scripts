@@ -101,7 +101,7 @@ endif
 # run programs
 # ---------------------------------------------------------------------------
 
-set ap_cmd        = ${this_ap}/ap.cmd.${subj}
+set ap_cmd = ${this_ap}/ap.cmd.${subj}
 
 \mkdir -p ${this_ap}
 
