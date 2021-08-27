@@ -74,11 +74,20 @@ endif
 
 # unpack tgz and download git repo
 
-# clone repo
-echo git clone https://github.com/afni/$reponame.git
-git clone https://github.com/afni/$reponame.git
-if ( $status ) then
-   exit 1
+# clone repo (or else just update)
+if ( ! -d $reponame ) then
+   echo git clone https://github.com/afni/$reponame.git
+   git clone https://github.com/afni/$reponame.git
+   if ( $status ) then
+      exit 1
+   endif
+else
+   cd $reponame
+   echo git status
+   git status
+   echo git pull
+   git pull
+   cd ..
 endif
 echo ""
 
@@ -92,7 +101,8 @@ endif
 cd $datadir
 
 echo ""
-echo "-- ready to work from $PWD, input is $tgzfile :"
+echo "-- ready to work from $PWD"
+echo "   input is $tgzfile :"
 ls -lh $tgzdir/$tgzfile
 echo ""
 echo "++ starting by cloning git repo"
