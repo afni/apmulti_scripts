@@ -2,12 +2,12 @@
 
 # ---------------------------------------------------------------------------
 # build APMULTI tree *in place*
-# input: require path to apmulti_data.tgz file
+# input: list of of subject data packages
 # output: the resulting tree will be put here ($PWD)
 
 # example usage:
-# tcsh ../APMULTI_FULL/init_apmulti_tree.tcsh \
-#      ../APMULTI_FULL/apmulti_data.tgz |& tee out.init_tree.txt
+# tcsh init_apmulti_tree.tcsh \
+#      apmulti_subj_packages/sub-004.tgz |& tee out.init_tree.txt
 # ---------------------------------------------------------------------------
 
 set datadir     = apmulti_data
@@ -18,33 +18,48 @@ set reponame    = apmulti_scripts
 #              So unless this script is changed for swarming, no reference
 #              will be made to a scratch dir.
 
-if ( -d $datadir ) then
-   echo "** there is already a $datadir here"
-   echo "   please run from a clean directory"
-   exit 1
-endif
-
 # ---------------------------------------------------------------------------
-# require input to be a path to apmulti_data.tgz and work from there
+# require input to be a path to sub-*.tgz and work from there
+
+set prog = `basename $0`
+if ( $#argv != 1 ) then
+   echo "usage: $prog path/to/sub-XXX.tgz"
+   exit 0
+endif
 
 set tgzpath = $1
 
-# and note the directory and name
+# note the directory and name of tgz file, and check the format
 set tgzfile = $tgzpath:t
 set tgzdir  = $tgzpath:h
 if ( $tgzdir == $tgzpath ) then
    set tgzdir = .
 endif
+# update tgzdir to be a full path
+cd $tgzdir
+set tgzdir = `pwd`
+cd -
 
-if ( $tgzfile != $datadir.tgz ) then
-   echo "** input should be path/to/$datadir.tgz"
-   exit 0
+# note subject and extension
+set subj = $tgzfile:r
+set ext = $tgzfile:e
+
+# and test them
+echo "++ tgz input subj = $subj, ext = $ext"
+if ( ! ($subj =~ sub-???) || ($ext != tgz) ) then
+   echo "** invalid input format"
+   exit 1
 endif
 
 # require sight of the .tgz file
-if ( ! -f $tgzdir/$datadir.tgz ) then
-   echo "** do not see $tgzdir/$datadir.tgz"
-   echo "         from $tgzpath"
+if ( ! -f $tgzdir/$tgzfile ) then
+   echo "** do not see path $tgzdir/$tgzfile"
+   exit 1
+endif
+
+# finally, make sure we do not alreayd have this subject
+if ( -d $datadir/$subj ) then
+   echo "** already have $datadir/$subj, will not overwrite"
    exit 1
 endif
 
@@ -58,25 +73,34 @@ endif
 # ---------------------------------------------------------------------------
 
 # unpack tgz and download git repo
-endif
-
-echo ""
-echo "-- ready to work from $PWD, input is $datadir.tgz :"
-ls -lh $tgzdir/$datadir.tgz
-echo ""
-echo "++ starting by cloning git repo"
-echo ""
-
-set echo
 
 # clone repo
+echo git clone https://github.com/afni/$reponame.git
 git clone https://github.com/afni/$reponame.git
 if ( $status ) then
    exit 1
 endif
+echo ""
+
+if ( ! -d $datadir ) then
+   mkdir $datadir
+   if ( $status ) then
+      echo "** no permission to write here"
+      exit 1
+   endif
+endif
+cd $datadir
+
+echo ""
+echo "-- ready to work from $PWD, input is $tgzfile :"
+ls -lh $tgzdir/$tgzfile
+echo ""
+echo "++ starting by cloning git repo"
+echo ""
 
 # unpack tree
-time tar xfz $tgzdir/$datadir.tgz
+echo time tar xfz $tgzdir/$tgzfile
+time tar xfz $tgzdir/$tgzfile
 
 echo ""
 echo "...done"
