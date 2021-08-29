@@ -87,7 +87,7 @@ else
    git status
    echo git pull
    git pull
-   cd ..
+   cd -
 endif
 echo ""
 
