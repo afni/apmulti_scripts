@@ -75,6 +75,8 @@ endif
 # unpack tgz and download git repo
 
 # clone repo (or else just update)
+echo ""
+echo "++ starting by cloning/pulling git repo"
 if ( ! -d $reponame ) then
    echo git clone https://github.com/afni/$reponame.git
    git clone https://github.com/afni/$reponame.git
@@ -104,8 +106,6 @@ echo ""
 echo "-- ready to work from $PWD"
 echo "   input is $tgzfile :"
 ls -lh $tgzdir/$tgzfile
-echo ""
-echo "++ starting by cloning git repo"
 echo ""
 
 # unpack tree
