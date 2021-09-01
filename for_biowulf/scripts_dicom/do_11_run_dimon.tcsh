@@ -10,7 +10,7 @@
 set din_root    = apmulti_dicom
 set din_droot   = data_00_dicom
 set dout_droot  = data_11_AFNI_EPI
-set subj        = sub-001
+set subj        = sub-004
 set ses         = ses-01
 
 # --------------------------------------------------
@@ -29,7 +29,6 @@ set din_physio  = physio_pulse_respiration_traces  # under $din_dicom
 
 # output vars
 set dout_dimon  = $dout_droot/$subj/$ses
-set epi_prefix  = epi
 set do_recenter = 1        # keep off to match RT and dimon output
 
 # ----------------------------------------------------------------------
@@ -57,15 +56,43 @@ endif
 cd $din_dicom
 set din_dicom_path = `pwd`
 
-set dirs_skip  = ( mr_0001 )
-set dirs_basic = ( mr_000[2-3] )          # asset, reverse blip
-set labs_basic = ( asset blip )
-
 # directory and matched label scripts
-set dirs_ME    = ( mr_000[4-9] mr_0011 )
-set labs_ME    = ( naming_{1.1,1.2,2.1,2.2} recog_{1,2} rest )
+set task_file  = task.dirs.txt
+set task_anat  = ( anat )
+set task_ME    = ( rest naming{1,2}_run{1,2} recog_run{1,2} )
+set task_SE    = ( blip )
+
+if ( ! -f $task_file ) then
+   echo "** missgin task_file $task_file for subj $subj"
+   exit 1
+endif
+
+# assign dirs corresponding to tasks
+set dir_anat = `\grep $task_anat $task_file | awk '{print $1}'`
+set dirs_ME  = ()
+set dirs_SE  = ()
+
+# set dirs for ME and other
+foreach task ( $task_ME )
+   set tdir = `awk "/$task/"' {print $1}' $task_file`
+   set dirs_ME = ( $dirs_ME $tdir )
+   if ( ! -d $tdir ) then
+      echo "** subj $subj : missing task dir '$tdir' for task '$task'"
+      exit 1
+   endif
+end
+foreach task ( $task_SE )
+   set tdir = `awk "/$task/"' {print $1}' $task_file`
+   set dirs_SE = ( $dirs_SE $tdir )
+   echo "== tdir = '$tdir'"
+   if ( ! -d $tdir ) then
+      echo "** subj $subj : missing task dir '$tdir' for task '$task'"
+      exit 1
+   endif
+end
 
 cd -
+
 
 # ----------------------------------------------------------------------
 # I thought we were not supposed to need this set...
@@ -78,52 +105,56 @@ cd $dout_dimon
 
 # ----------------------------------------------------------------------
 # basic dirs ( single echo )
-set dir_list = ( $dirs_basic )
-set lab_list = ( $labs_basic )
+set dir_list = ( $dirs_SE )
+set lab_list = ( $task_SE )
 foreach index ( `count -digits 1 1 $#dir_list` )
     set dir = $dir_list[$index]
-    set dlab = `echo $dir | cut -b6-`
     set label = $lab_list[$index]
 
     Dimon -infile_pat $din_dicom_path/$dir/'*.dcm'    \
           -gert_create_dataset                        \
           -save_details DET.$dir                      \
-          -gert_to3d_prefix $epi_prefix.r$dlab.$label
+          -gert_to3d_prefix ${subj}_task-$label
 end
 
 # ----------------------------------------------------------------------
 # multi-echo dirs
 set dir_list = ( $dirs_ME )
-set lab_list = ( $labs_ME )
+set lab_list = ( $task_ME )
 foreach index ( `count -digits 1 1 $#dir_list` )
     set dir = $dir_list[$index]
-    set dlab = `echo $dir | cut -b6-`
     set label = $lab_list[$index]
 
     Dimon -infile_pat $din_dicom_path/$dir/'*.dcm'    \
           -gert_create_dataset                        \
           -save_details DET.$dir                      \
           -num_chan 3 -sort_method geme_index         \
-          -gert_to3d_prefix $epi_prefix.r$dlab.$label
+          -gert_to3d_prefix ${subj}_task-$label
+
+    set scan = `echo $dir | awk -F_ '{print $2}'`
+    foreach ptype ( ECG Resp )
+       cp -pv $din_dicom_path/$din_physio/${ptype}_epiRTnih_scan_${scan}.txt \
+              ${subj}_task-${label}_physio-$ptype.txt
+    end
 end
 
 # ----------------------------------------------------------------------
 # possibly try to match 0,0,0 across these oblique datasets
 # (do 1 at a time to keep history short)
 if ( $do_recenter ) then
-   foreach epi ( $epi_prefix.*.HEAD )
+   foreach epi ( ${subj}*.HEAD )
       3drefit -oblique_recenter $epi
    end
 endif
 
 # ----------------------------------------------------------------------
 # fake a blip forward dataset by copying 10 vols from run 04 chan 2
-3dTcat -prefix $epi_prefix.r04.blip.fwd.chan2 \
-              "$epi_prefix.r04.naming_1.1_chan_002+orig[0..9]"
+3dTcat -prefix ${subj}_task-blip-fwd_chan_002+orig  \
+               ${subj}_task-naming1_run1_chan_002+orig.HEAD'[0..9]'
 
 # ----------------------------------------------------------------------
-# copy physio tree here
-\cp -rp $din_dicom_path/$din_physio physio
+# and copy task file, just to have
+\cp -p $din_dicom_path/$task_file .
 
 # ----------------------------------------------------------------------
 # cleanup dimon files

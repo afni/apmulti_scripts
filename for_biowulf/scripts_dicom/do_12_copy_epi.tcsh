@@ -9,7 +9,7 @@
 set din_root    = apmulti_dicom
 set din_droot   = data_11_AFNI_EPI
 set dout_droot  = data_12_NIFTI_EPI
-set subj        = sub-001
+set subj        = sub-004
 set ses         = ses-01
 
 
@@ -47,97 +47,50 @@ set suffix   = bold.nii.gz
 set NIH_physio = epiRTnih_scan
 
 # ----------------------------------------------------------------------
-# copy asset and blip dsets
+# copy blip dsets
 
 set rname    = run-1
 set ename    = echo-1
 
-3dcopy ${din_subj}/epi.r02.asset+orig   \
-       ${dout_subj}/${sid}_acq-asset_${suffix}
-
-3dcopy ${din_subj}/epi.r03.blip+orig    \
+3dcopy ${din_subj}/${subj}_task-blip+orig \
        ${dout_subj}/${sid}_acq-blip_dir-opp_run-1_${suffix}
 
-3dcopy ${din_subj}/epi.r04.blip.fwd.chan2+orig   \
+3dcopy ${din_subj}/${subj}_task-blip-fwd_chan_002+orig \
        ${dout_subj}/${sid}_acq-blip_dir-match_run-1_${suffix}
 
 # ======================================================================
 # the following (task and rest) EPI dsets include physio files
 # ======================================================================
 
-# ----------------------------------------------------------------------
-# naming
+foreach file ( ${din_subj}/sub*.HEAD )
+   # break into pieces, partitioned by _ (or +)
+   set fshort = $file:t
+   set fparts = ( `echo $fshort | tr _+ ' '` )
+   echo "++ parsing $subj file $fshort"
+   echo "   parts: $fparts"
+   if ( $#fparts <  6 && $fparts[2] =~ task-blip* ) then
+      echo "-- skipping already copied blip dataset"
+      continue
+   else if ( $#fparts != 6 ) then
+      echo "** bad format for file $file"
+      exit 1
+   endif
 
-set task = naming
-set in_runs = ( 04 05 06 07 )
-set iind = 1
-foreach tver ( 1 2 )
-  foreach run ( 1 2 )
-    set irun = $in_runs[$iind]
-    @ iind += 1
+   set ftask = $fparts[2]                    # task is okay
+   set frun  = `echo $fparts[3] | cut -b4-`  # remove 'run'
+   set chan  = `ccalc -i $fparts[5]`         # remove zero padding
+   set fout = ${sid}_${ftask}_run-${frun}_echo-${chan}_${suffix}
 
-    foreach eind ( 1 2 3 )
-      set ein  = epi.r$irun.${task}_${tver}.${run}_chan_00${eind}+orig
-      set eout = ${sid}_task-${task}-${tver}_run-${run}_echo-${eind}_${suffix}
-      3dcopy ${din_subj}/${ein} ${dout_subj}/${eout}
-    end
+   # main step: copy dataset to a new name
+   echo 3dcopy ${file} ${dout_subj}/$fout
+   3dcopy ${file} ${dout_subj}/$fout
 
-    # and copy physio
-    foreach ptype ( ECG Resp )
-       set pin = ${ptype}_${NIH_physio}_00${irun}.txt
-       set pout = ${sid}_task-${task}-${tver}_run-${run}_physio-$ptype.txt
-       cp -v ${din_subj}/physio/${pin} ${dout_subj}/${pout}
-    end
-  end
-end
-
-# ----------------------------------------------------------------------
-# recog
-
-set task = recog
-set in_runs = ( 08 09 )
-set iind = 1
-foreach tver ( 1 2 )
-  foreach run ( 1 )
-    set irun = $in_runs[$iind]
-    @ iind += 1
-
-    foreach eind ( 1 2 3 )
-      set ein  = epi.r$irun.${task}_${tver}_chan_00${eind}+orig
-      set eout = ${sid}_task-${task}-${tver}_run-${run}_echo-${eind}_${suffix}
-      3dcopy ${din_subj}/${ein} ${dout_subj}/${eout}
-    end
-
-    # and copy physio
-    foreach ptype ( ECG Resp )
-       set pin = ${ptype}_${NIH_physio}_00${irun}.txt
-       set pout = ${sid}_task-${task}-${tver}_run-${run}_physio-$ptype.txt
-       cp -v ${din_subj}/physio/${pin} ${dout_subj}/${pout}
-    end
-  end
-end
-
-# ----------------------------------------------------------------------
-# rest
-
-set task = rest
-set in_runs = ( 11 )
-set iind = 1
-foreach run ( 1 )
-    set irun = $in_runs[$iind]
-    @ iind += 1
-
-    foreach eind ( 1 2 3 )
-      set ein  = epi.r$irun.${task}_chan_00${eind}+orig
-      set eout = ${sid}_task-${task}_run-${run}_echo-${eind}_${suffix}
-      3dcopy ${din_subj}/${ein} ${dout_subj}/${eout}
-    end
-
-    # and copy physio
-    foreach ptype ( ECG Resp )
-       set pin = ${ptype}_${NIH_physio}_00${irun}.txt
-       set pout = ${sid}_task-${task}_run-${run}_physio-$ptype.txt
-       cp -v ${din_subj}/physio/${pin} ${dout_subj}/${pout}
-    end
+   foreach ptype ( ECG Resp )
+      set pin  = ${subj}_task-${ftask}_run${frun}_physio-${ptype}.txt
+      set pout = ${sid}_${ftask}_run-${frun}_physio-${ptype}.txt
+      if ( -f ${din_subj}/$pin ) then
+         cp -pv ${din_subj}/${pin} ${dout_subj}/${pout}
+      endif
+   end
 end
 

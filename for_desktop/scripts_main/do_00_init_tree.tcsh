@@ -1,14 +1,16 @@
 #!/usr/bin/env tcsh
 
-# Create new data tree for publishing.
-# Copy anat dset and DICOM trees into it.
+# Create new data tree for publishing, all under:
+#     apmulti_root
+# Copy anat dset and DICOM trees into it, along with
+# optional FS and SSW results.
 
 # ===========================================================================
 # main vars to possibly modify
 
 # ----------------------------------------
 # subject ID (for output)
-set subj  = sub-001
+set subj  = sub-004
 set ses   = ses-01
 
 # ----------------------------------------
@@ -17,30 +19,36 @@ set ses   = ses-01
 # dir contains all scripts (git tree or copy)
 set din_scripts = apmulti_scripts/for_desktop
 
-# contains DICOM images and extras (anat, FS and SSW output)
-set din_dicom   = apmulti_data/$subj/$ses
-set din_extras  = $din_dicom/mr_0010_proc
+# note DICOM root and task list file (DICOM files, possible FS/SSW output)
+set din_dicom = apmulti_data/${subj}/${ses}
+set task_file = ${din_dicom}/task.dirs.txt
 
 # root of tree (to possibly distribute)
 set dout_aproot = apmulti_root
 
 # ----------------------------------------
-# anat vars (orig and new)
-set anat_in     = ${din_extras}/anat_02_anon.reface.nii.gz
-set anat_out    = ${subj}_${ses}_mprage_run-1_T1w.nii.gz
+# find anat and set vars (orig and new)
+set din_anat = `\grep anat $task_file | awk '{print $1}'`
+if ( $status ) then
+    echo "failed to find anat dir from ${task_file}"
+    exit 1
+endif
+set din_anat = ${din_dicom}/${din_anat}
+set anat_in  = ${din_anat}/anat_reface.nii.gz
+set anat_out = ${subj}_${ses}_mprage_run-1_T1w.nii.gz
 
 # ----------------------------------------
-# SSW and FreeSurfer results
-set din_ssw     = ${din_extras}/ssw_results_NvR_S02
-set din_suma    = ${din_extras}/group_fs/sub_02/SUMA
+# (optional) SSW and FreeSurfer results
+set din_ssw     = ${din_anat}/ssw_results
+set din_suma    = ${din_anat}/group_fs/$subj/SUMA
  
 # ===========================================================================
 # verify inputs
 
 # ----------------------------------------------------------------------
-# be sure input dirs exist
-if ( ! -d $din_scripts/scripts_main || ! -d $din_extras ) then
-   echo "** missing main input dirs, $din_scripts/scripts_main or $din_extras"
+# check scripts dir and anatomical input
+if ( ! -d $din_scripts/scripts_main || ! -f $anat_in ) then
+   echo "** missing main input: $din_scripts/scripts_main or $din_anat"
    exit 1
 endif
 
@@ -84,13 +92,15 @@ set dout_subj = $dout_aproot/apmulti_demo/data_00_basic/$subj/$ses
 nifti_tool -rm_ext ALL -overwrite -infile $dout_subj/anat/$anat_out
 
 # and copy a corresponding png file
-cp ${din_extras}/anat_02_anon.face.sag.png \
-   $dout_subj/anat/${subj}_${ses}_mprage_run-1_T1w_face-sag.png
+if ( -f ${din_anat}/anat_02_anon.face.sag.png ) then
+   cp ${din_anat}/anat_02_anon.face.sag.png \
+      $dout_subj/anat/${subj}_${ses}_mprage_run-1_T1w_face-sag.png
+endif
 
 # ----------------------------------------------------------------------
 # apmulti_demo: copy SSW and SUMA results
 if ( -d $din_ssw ) then
-\cp -rp $din_ssw $dout_aproot/apmulti_demo/data_13_ssw/$subj
+   \cp -rp $din_ssw $dout_aproot/apmulti_demo/data_13_ssw/$subj
 endif
 
 if ( -d $din_suma ) then
@@ -104,7 +114,8 @@ endif
 # cp is appropriate, but a pre-made copy to mv is faster to test
 if ( ! -d $dout_aproot/apmulti_dicom/data_00_dicom/$subj/$ses ) then
    \mkdir -p $dout_aproot/apmulti_dicom/data_00_dicom/$subj/$ses
-   rsync -avq --exclude mr_0010_proc                                 \
+   rsync -avq --exclude 'ssw_results*'                               \
+              --exclude group_fs                                     \
               --exclude physio_pulse_respiration_traces.orig         \
               $din_dicom/                                            \
               $dout_aproot/apmulti_dicom/data_00_dicom/$subj/$ses/
