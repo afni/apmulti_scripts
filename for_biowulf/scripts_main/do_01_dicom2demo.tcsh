@@ -13,7 +13,7 @@ set dout_epi = apmulti_demo/data_00_basic
 
 # ----------------------------------------
 # subject ID (for output)
-set subj  = sub-001
+set subj  = sub-004
 set ses   = ses-01
 
 # available EPI data
@@ -39,7 +39,7 @@ endif
 # ----------------------------------------------------------------------
 # be sure input dirs exist
 if ( ! -d $din_epi/$subj/$ses || ! -d $dout_epi ) then
-   echo "** missing input dir, $indir/$subj/$ses"
+   echo "** missing input dir, $din_epi/$subj/$ses or $dout_epi"
    exit 1
 endif
 

@@ -68,17 +68,27 @@ foreach file ( ${din_subj}/sub*.HEAD )
    set fparts = ( `echo $fshort | tr _+ ' '` )
    echo "++ parsing $subj file $fshort"
    echo "   parts: $fparts"
-   if ( $#fparts <  6 && $fparts[2] =~ task-blip* ) then
-      echo "-- skipping already copied blip dataset"
-      continue
+
+   # set fask, frun and chan
+   if ( $#fparts <  6 ) then
+      if ( $fparts[2] =~ task-blip* ) then
+         echo "-- skipping already copied blip dataset"
+         continue
+      else if ( $fparts[2] =~ task-rest* ) then
+         set ftask = $fparts[2]                    # task is okay
+         set frun  = 1                             # only 1 run, not in fname
+         set chan  = `ccalc -i $fparts[4]`         # remove zero padding
+      endif
    else if ( $#fparts != 6 ) then
       echo "** bad format for file $file"
       exit 1
+   else
+      # the typical case
+      set ftask = $fparts[2]                    # task is okay
+      set frun  = `echo $fparts[3] | cut -b4-`  # remove 'run'
+      set chan  = `ccalc -i $fparts[5]`         # remove zero padding
    endif
 
-   set ftask = $fparts[2]                    # task is okay
-   set frun  = `echo $fparts[3] | cut -b4-`  # remove 'run'
-   set chan  = `ccalc -i $fparts[5]`         # remove zero padding
    set fout = ${sid}_${ftask}_run-${frun}_echo-${chan}_${suffix}
 
    # main step: copy dataset to a new name
@@ -86,10 +96,18 @@ foreach file ( ${din_subj}/sub*.HEAD )
    3dcopy ${file} ${dout_subj}/$fout
 
    foreach ptype ( ECG Resp )
-      set pin  = ${subj}_task-${ftask}_run${frun}_physio-${ptype}.txt
+      if ( -f ${din_subj}/${subj}_${ftask}_run${frun}_physio-${ptype}.txt ) then
+         set pin  = ${subj}_${ftask}_run${frun}_physio-${ptype}.txt
+      else if ( -f ${din_subj}/${subj}_${ftask}_physio-${ptype}.txt ) then
+         set pin  = ${subj}_${ftask}_physio-${ptype}.txt
+      endif
+
       set pout = ${sid}_${ftask}_run-${frun}_physio-${ptype}.txt
+
       if ( -f ${din_subj}/$pin ) then
          cp -pv ${din_subj}/${pin} ${dout_subj}/${pout}
+      else
+         echo "-- missing physio file $pin"
       endif
    end
 end
