@@ -67,8 +67,9 @@ set sdir_work = ${sdir_physio}
 # --------------------------------------------------------------------------
 
 # dataset inputs
-set physio_card = ${subj}_${ses}_task-rest_run-1_physio-ECG.txt
-set physio_resp = ${subj}_${ses}_task-rest_run-1_physio-Resp.txt
+set task_label  = task-rest_run-1_physio
+set physio_card = ${subj}_${ses}_${task_label}-ECG.txt
+set physio_resp = ${subj}_${ses}_${task_label}-Resp.txt
 
 
 # control variables
@@ -111,8 +112,9 @@ cat << EOF >! ${run_script}
 
 wc ${physio_resp} ${physio_card}
 
-RetroTS.py -r ${physio_resp}     \
-           -c ${physio_card}     \
+RetroTS.py -prefix ${subj}_${ses}_${task_label} \
+           -r ${physio_resp}                    \
+           -c ${physio_card}                    \
            -p 50 -n 33 -v 2.2
 
 EOF
