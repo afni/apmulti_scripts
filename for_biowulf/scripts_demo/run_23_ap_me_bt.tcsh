@@ -15,7 +15,7 @@
 set cmd           = 23_ap_me_bt
 
 # labels
-set subj          = sub-001
+set subj          = sub-004
 set ses           = ses-01
 
 # upper directories
