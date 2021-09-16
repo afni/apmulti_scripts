@@ -14,7 +14,7 @@
 set cmd           = 12_fs
 
 # labels
-set subj          = sub-001
+set subj          = sub-004
 set ses           = ses-01
 
 # upper directories
