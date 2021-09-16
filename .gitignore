@@ -1,0 +1,5 @@
+# do not include backup files or mac poop
+*~
+*.swp
+.DS_Store
+
