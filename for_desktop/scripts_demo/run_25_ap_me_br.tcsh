@@ -12,7 +12,7 @@
 # --------------------------------------------------------------------------
 
 # specify script to execute
-set cmd           = 25_ap_me_ricor
+set cmd           = 25_ap_me_br
 
 # labels
 set subj          = sub-004

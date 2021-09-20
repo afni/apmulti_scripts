@@ -43,6 +43,7 @@ set sdir_ap_me     = ${dir_ap_me}/${subj}/${ses}
 set sdir_ap_me_b   = ${dir_ap_me_b}/${subj}/${ses}
 set sdir_ap_me_bt  = ${dir_ap_me_bt}/${subj}/${ses}
 set sdir_ap_me_bts = ${dir_ap_me_bts}/${subj}/${ses}
+set sdir_ap_me_br  = ${dir_ap_me_br}/${subj}/${ses}
 
 # --------------------------------------------------------------------------
 # data and control variables
@@ -167,7 +168,7 @@ endif
 time tcsh -xef proc.${subj} |& tee output.proc.${subj}
 
 set ecode = ${status}
-if ( ${ecod3} ) then
+if ( ${ecode} ) then
     echo "++ FAILED AP"
 else
     echo "++ FINISHED AP"
