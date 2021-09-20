@@ -1,6 +1,6 @@
 #!/usr/bin/env tcsh
 
-# AP: basic, multiecho rest, but more like example 13
+# AP: basic, multiecho rest, with blip up/down correction and ricor
 
 # Process a single subj+ses pair.  Run this script in
 # apmulti_demo/scripts/, via the corresponding run_*tcsh script.
@@ -21,6 +21,7 @@ set dir_log        = ${dir_inroot}/logs
 set dir_basic      = ${dir_inroot}/data_00_basic
 set dir_fs         = ${dir_inroot}/data_12_fs
 set dir_ssw        = ${dir_inroot}/data_13_ssw
+set dir_physio     = ${dir_inroot}/data_14_physio
 
 set dir_ap_se      = ${dir_inroot}/data_20_ap_se
 set dir_ap_me      = ${dir_inroot}/data_21_ap_me
@@ -34,6 +35,7 @@ set sdir_epi       = ${sdir_basic}/func
 set sdir_fs        = ${dir_fs}/${subj}/${ses}
 set sdir_suma      = ${sdir_fs}/SUMA
 set sdir_ssw       = ${dir_ssw}/${subj}/${ses}
+set sdir_physio    = ${dir_physio}/${subj}/${ses}
 
 set sdir_ap_se     = ${dir_ap_se}/${subj}/${ses}
 set sdir_ap_me     = ${dir_ap_me}/${subj}/${ses}
@@ -48,10 +50,17 @@ set sdir_ap_me_bts = ${dir_ap_me_bts}/${subj}/${ses}
 setenv AFNI_COMPRESSOR GZIP
 
 # dataset inputs
-set sdir_this_ap  = ${sdir_ap_me}                    # pick AP dir (and cmd)
+set sdir_this_ap  = ${sdir_ap_me_b}                 # pick AP dir (and cmd)
 
 set dsets_epi_me  = ( ${sdir_epi}/${subj}_${ses}_task-rest_*_echo-?_bold.nii* )
 set me_times      = ( 12.5 27.6 42.7 )
+
+set blip_prefix   = ${sdir_epi}/${subj}_${ses}_acq-blip
+set epi_forward   = "${blip_prefix}_dir-match_run-1_bold.nii.gz[0]"
+set epi_reverse   = "${blip_prefix}_dir-opp_run-1_bold.nii.gz[0]"
+
+set physio_prefix = ${sdir_physio}/${subj}_${ses}
+set physio_regs   = ${physio_prefix}_task-rest_run-1_physio.slibase.1D
 
 set anat_cp       = ${sdir_ssw}/anatSS.${subj}.nii
 set anat_skull    = ${sdir_ssw}/anatU.${subj}.nii
@@ -88,8 +97,8 @@ cat <<EOF >! ${ap_cmd}
 
 afni_proc.py                                                            \
      -subj_id                  ${subj}                                  \
-     -blocks despike tshift align tlrc volreg mask combine blur scale   \
-         regress                                                        \
+     -blocks despike ricor tshift align tlrc volreg mask combine blur   \
+         scale regress                                                  \
      -radial_correlate_blocks  tcat volreg                              \
      -copy_anat                ${anat_cp}                               \
      -anat_has_skull           no                                       \
@@ -99,10 +108,15 @@ afni_proc.py                                                            \
      -anat_follower_ROI        FSvent       epi  ${roi_FSvent}          \
      -anat_follower_ROI        FSWe         epi  ${roi_FSWe}            \
      -anat_follower_erode      FSvent FSWe                              \
+     -blip_forward_dset        "${epi_forward}"                         \
+     -blip_reverse_dset        "${epi_reverse}"                         \
      -dsets_me_run             ${dsets_epi_me}                          \
      -echo_times               ${me_times}                              \
      -combine_method           OC                                       \
      -tcat_remove_first_trs    ${nt_rm}                                 \
+     -ricor_regs               ${physio_regs}                           \
+     -ricor_regs_nfirst        ${nt_rm}                                 \
+     -ricor_regress_method     per-run                                  \
      -tshift_interp            -wsinc9                                  \
      -align_opts_aea           -cost lpc+ZZ -giant_move -check_flip     \
      -tlrc_base                ${template}                              \
@@ -133,14 +147,31 @@ afni_proc.py                                                            \
 
 EOF
 
+if ( ${status} ) then
+    set ecode = 1
+    goto COPY_AND_EXIT
+endif
+
 cd ${sdir_this_ap}
 
 # execute AP command to make processing script
 tcsh -xef ${ap_cmd} |& tee output.ap.cmd.${subj}
 
+if ( ${status} ) then
+    set ecode = 1
+    goto COPY_AND_EXIT
+endif
+
 # execute the proc script, saving text info
 time tcsh -xef proc.${subj} |& tee output.proc.${subj}
 
-echo "++ FINISHED AP"
+set ecode = ${status}
+if ( ${ecod3} ) then
+    echo "++ FAILED AP"
+else
+    echo "++ FINISHED AP"
+endif
 
-exit 0
+# ---------------------------------------------------------------------------
+
+exit $ecode

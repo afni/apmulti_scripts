@@ -24,7 +24,6 @@ set dir_log        = ${dir_inroot}/logs
 set dir_basic      = ${dir_inroot}/data_00_basic
 set dir_fs         = ${dir_inroot}/data_12_fs
 set dir_ssw        = ${dir_inroot}/data_13_ssw
-set dir_physio     = ${dir_inroot}/data_14_physio
 
 set dir_ap_se      = ${dir_inroot}/data_20_ap_se
 set dir_ap_me      = ${dir_inroot}/data_21_ap_me
@@ -38,7 +37,6 @@ set sdir_epi       = ${sdir_basic}/func
 set sdir_fs        = ${dir_fs}/${subj}/${ses}
 set sdir_suma      = ${sdir_fs}/SUMA
 set sdir_ssw       = ${dir_ssw}/${subj}/${ses}
-set sdir_physio    = ${dir_physio}/${subj}/${ses}
 
 set sdir_ap_se     = ${dir_ap_se}/${subj}/${ses}
 set sdir_ap_me     = ${dir_ap_me}/${subj}/${ses}
