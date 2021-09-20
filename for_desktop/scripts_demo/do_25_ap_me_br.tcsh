@@ -28,6 +28,7 @@ set dir_ap_me      = ${dir_inroot}/data_21_ap_me
 set dir_ap_me_b    = ${dir_inroot}/data_22_ap_me_b
 set dir_ap_me_bt   = ${dir_inroot}/data_23_ap_me_bt
 set dir_ap_me_bts  = ${dir_inroot}/data_24_ap_me_bts
+set dir_ap_me_br   = ${dir_inroot}/data_25_ap_me_br
 
 # subject directories
 set sdir_basic     = ${dir_basic}/${subj}/${ses}
@@ -50,7 +51,7 @@ set sdir_ap_me_bts = ${dir_ap_me_bts}/${subj}/${ses}
 setenv AFNI_COMPRESSOR GZIP
 
 # dataset inputs
-set sdir_this_ap  = ${sdir_ap_me_b}                 # pick AP dir (and cmd)
+set sdir_this_ap  = ${sdir_ap_me_br}                # pick AP dir (and cmd)
 
 set dsets_epi_me  = ( ${sdir_epi}/${subj}_${ses}_task-rest_*_echo-?_bold.nii* )
 set me_times      = ( 12.5 27.6 42.7 )
