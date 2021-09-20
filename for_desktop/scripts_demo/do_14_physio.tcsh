@@ -91,7 +91,7 @@ wc ${physio_resp} ${physio_card}
 
 RetroTS.py -prefix ${subj}_${ses}_${task_label} \
            -r ${physio_resp}                    \
-           -c ${physio_card}     \
+           -c ${physio_card}                    \
            -p 50 -n 33 -v 2.2
 
 EOF

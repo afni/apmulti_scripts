@@ -1,6 +1,7 @@
 #!/bin/tcsh
 
 # physio: run RetroTS.py to get slicewise regressors
+#         -> the biowulf version
 
 # This script runs a corresponding do_*.tcsh script, for a given
 # subj+ses pair.  It could be adapted to loop over many subj+ses values.
