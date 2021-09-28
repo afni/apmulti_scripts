@@ -17,7 +17,7 @@ set ses   = ses-01
 # top-level input and output dirs
 
 # dir contains all scripts (git tree or copy)
-set din_scripts = apmulti_scripts/for_desktop
+set din_scripts = apmulti_scripts/apmulti_root
 
 # note DICOM root and task list file (DICOM files, possible FS/SSW output)
 set din_dicom = apmulti_data/${subj}/${ses}
@@ -47,8 +47,8 @@ set din_suma    = ${din_anat}/group_fs/$subj/SUMA
 
 # ----------------------------------------------------------------------
 # check scripts dir and anatomical input
-if ( ! -d $din_scripts/scripts_main || ! -f $anat_in ) then
-   echo "** missing main input: $din_scripts/scripts_main or $din_anat"
+if ( ! -d $din_scripts/scripts_desktop || ! -f $anat_in ) then
+   echo "** missing main input: $din_scripts/scripts_desktop or $din_anat"
    exit 1
 endif
 
@@ -76,11 +76,8 @@ endif
 \mkdir -p $dout_aproot/apmulti_demo/logs
 
 # ----------------------------------------------------------------------
-# copy the scripts scripts in
-\cp -rp $din_scripts/scripts_main $dout_aproot/scripts
-\cp -rp $din_scripts/scripts_dicom $dout_aproot/apmulti_dicom/scripts
-\cp -rp $din_scripts/scripts_demo $dout_aproot/apmulti_demo/scripts
-
+# copy the scripts scripts in (dirs match under apmulti_root)
+\cp -rp $din_scripts/* $dout_aproot
 
 # ----------------------------------------------------------------------
 # apmulti_demo: copy anatomical
