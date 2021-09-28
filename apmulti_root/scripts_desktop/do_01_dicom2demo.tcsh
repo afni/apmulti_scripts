@@ -28,7 +28,7 @@ set tasklist = ( acq-blip task-rest )
 
 # ----------------------------------------------------------------------
 # allow for starting from scripts dir
-if ( $PWD:t == "scripts" ) then
+if ( $PWD:t =~ scripts_* ) then
    cd ..
 endif
 if ( $PWD:t != $din_root ) then

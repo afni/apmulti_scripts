@@ -15,7 +15,7 @@ set ses         = ses-01
 
 # --------------------------------------------------
 # might be common to run from scripts, but start up one dir
-if ( $PWD:t == "scripts" ) then
+if ( $PWD:t =~ scripts_* ) then
    cd ..
 endif
 if ( $PWD:t != $din_root ) then
