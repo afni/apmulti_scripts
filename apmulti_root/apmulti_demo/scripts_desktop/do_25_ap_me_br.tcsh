@@ -149,23 +149,17 @@ afni_proc.py                                                            \
 
 EOF
 
-if ( ${status} ) then
-    set ecode = 1
-    goto COPY_AND_EXIT
-endif
-
 cd ${sdir_this_ap}
 
 # execute AP command to make processing script
 tcsh -xef ${ap_cmd} |& tee output.ap.cmd.${subj}
 
-if ( ${status} ) then
-    set ecode = 1
-    goto COPY_AND_EXIT
-endif
+set ecode = ${status}
 
-# execute the proc script, saving text info
-time tcsh -xef proc.${subj} |& tee output.proc.${subj}
+if ( ! ${ecode} ) then
+   # execute the proc script, saving text info
+   time tcsh -xef proc.${subj} |& tee output.proc.${subj}
+endif
 
 set ecode = ${status}
 if ( ${ecode} ) then

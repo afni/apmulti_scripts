@@ -175,11 +175,6 @@ afni_proc.py                                                            \
 
 EOF
 
-if ( ${status} ) then
-    set ecode = 1
-    goto COPY_AND_EXIT
-endif
-
 cd ${sdir_this_ap}
 
 # execute AP command to make processing script
