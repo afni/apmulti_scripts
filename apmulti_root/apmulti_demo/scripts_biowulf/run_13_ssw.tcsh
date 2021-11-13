@@ -15,7 +15,7 @@
 set cmd           = 13_ssw
 
 # labels
-set subj          = sub-004
+set subj          = sub-005
 set ses           = ses-01
 
 # upper directories

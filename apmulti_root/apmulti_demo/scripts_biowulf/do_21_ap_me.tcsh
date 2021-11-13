@@ -27,6 +27,7 @@ set ecode = 0
 # labels
 set subj           = $1
 set ses            = $2
+set ap_label       = 21_ap_me
 
 set template       = MNI152_2009_template_SSW.nii.gz 
 
@@ -37,12 +38,7 @@ set dir_basic      = ${dir_inroot}/data_00_basic
 set dir_fs         = ${dir_inroot}/data_12_fs
 set dir_ssw        = ${dir_inroot}/data_13_ssw
 set dir_physio     = ${dir_inroot}/data_14_physio
-
-set dir_ap_se      = ${dir_inroot}/data_20_ap_se
-set dir_ap_me      = ${dir_inroot}/data_21_ap_me
-set dir_ap_me_b    = ${dir_inroot}/data_22_ap_me_b
-set dir_ap_me_bt   = ${dir_inroot}/data_23_ap_me_bt
-set dir_ap_me_bts  = ${dir_inroot}/data_24_ap_me_bts
+set dir_ap         = ${dir_inroot}/data_${ap_label}
 
 # subject directories
 set sdir_basic     = ${dir_basic}/${subj}/${ses}
@@ -51,12 +47,7 @@ set sdir_fs        = ${dir_fs}/${subj}/${ses}
 set sdir_suma      = ${sdir_fs}/SUMA
 set sdir_ssw       = ${dir_ssw}/${subj}/${ses}
 set sdir_physio    = ${dir_physio}/${subj}/${ses}
-
-set sdir_ap_se     = ${dir_ap_se}/${subj}/${ses}
-set sdir_ap_me     = ${dir_ap_me}/${subj}/${ses}
-set sdir_ap_me_b   = ${dir_ap_me_b}/${subj}/${ses}
-set sdir_ap_me_bt  = ${dir_ap_me_bt}/${subj}/${ses}
-set sdir_ap_me_bts = ${dir_ap_me_bts}/${subj}/${ses}
+set sdir_ap        = ${dir_ap}/${subj}/${ses}
 
 # --------------------------------------------------------------------------
 # data and control variables
@@ -65,8 +56,6 @@ set sdir_ap_me_bts = ${dir_ap_me_bts}/${subj}/${ses}
 setenv AFNI_COMPRESSOR GZIP
 
 # dataset inputs
-set sdir_this_ap  = ${sdir_ap_me}                    # pick AP dir (and cmd)
-
 set dsets_epi_me  = ( ${sdir_epi}/${subj}_${ses}_task-rest_*_echo-?_bold.nii* )
 set me_times      = ( 12.5 27.6 42.7 )
 
@@ -93,8 +82,8 @@ set cen_outliers  = 0.05
 # try to use /lscratch for speed 
 if ( -d /lscratch/$SLURM_JOBID ) then
     set usetemp  = 1
-    set sdir_BW  = ${sdir_this_ap}
-    set sdir_this_ap  = /lscratch/$SLURM_JOBID/${subj}_${ses}
+    set sdir_BW  = ${sdir_ap}
+    set sdir_ap  = /lscratch/$SLURM_JOBID/${subj}_${ses}
 else
     set usetemp  = 0
 endif
@@ -103,9 +92,9 @@ endif
 # run programs
 # ---------------------------------------------------------------------------
 
-set ap_cmd = ${sdir_this_ap}/ap.cmd.${subj}
+set ap_cmd = ${sdir_ap}/ap.cmd.${subj}
 
-\mkdir -p ${sdir_this_ap}
+\mkdir -p ${sdir_ap}
 
 # write AP command to file
 cat <<EOF >! ${ap_cmd}
@@ -166,7 +155,7 @@ if ( ${status} ) then
     goto COPY_AND_EXIT
 endif
 
-cd ${sdir_this_ap}
+cd ${sdir_ap}
 
 # execute AP command to make processing script
 tcsh -xef ${ap_cmd} |& tee output.ap.cmd.${subj}
@@ -180,11 +169,12 @@ endif
 time tcsh -xef proc.${subj} |& tee output.proc.${subj}
 
 if ( ${status} ) then
+    echo "++ FAILED AP: ${ap_label}"
     set ecode = 1
     goto COPY_AND_EXIT
+else
+    echo "++ FINISHED AP: ${ap_label}"
 endif
-
-echo "++ FINISHED AP"
 
 # ---------------------------------------------------------------------------
 
@@ -193,14 +183,14 @@ COPY_AND_EXIT:
 # ----------------------------- biowulf-cmd --------------------------------
 
 # copy back from /lscratch to "real" location
-if( ${usetemp} && -d ${sdir_this_ap} ) then
+if( ${usetemp} && -d ${sdir_ap} ) then
     echo "++ Used /lscratch"
-    echo "++ Copy from: ${sdir_this_ap}"
+    echo "++ Copy from: ${sdir_ap}"
     echo "          to: ${sdir_BW}"
     \mkdir -p ${sdir_BW}
-    \cp -pr   ${sdir_this_ap}/* ${sdir_BW}/.
+    \cp -pr   ${sdir_ap}/* ${sdir_BW}/.
 endif
 
 # ---------------------------------------------------------------------------
 
-exit $ecode
+exit ${ecode}
