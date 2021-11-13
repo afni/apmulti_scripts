@@ -15,12 +15,17 @@
 set cmd           = 24_ap_me_bts
 
 # labels
-set subj          = sub-004
+set subj          = sub-005
 set ses           = ses-01
 
 # upper directories
 set dir_inroot    = ..
 set dir_log       = ${dir_inroot}/logs
+
+# --------------------------------------------------------------------------
+
+# make directory for storing text files to log the processing
+\mkdir -p ${dir_log}
 
 # --------------------------------------------------------------------------
 
