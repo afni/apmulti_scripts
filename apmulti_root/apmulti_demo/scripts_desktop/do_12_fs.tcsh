@@ -43,8 +43,7 @@ set dset_anat_00  = ${sdir_basic}/anat/${subj}_${ses}_mprage_run-1_T1w.nii.gz
 # + N_threads may be set elsewhere; to set here, uncomment the following line:
 ### setenv OMP_NUM_THREADS 4
 
-set nthr_avail = `afni_system_check.py -check_all | \
-                      grep "number of CPUs:" | awk '{print $4}'`
+set nthr_avail = `afni_system_check.py -disp_num_cpu'`
 set nthr_using = `afni_check_omp`
 
 echo "++ INFO: Using ${nthr_avail} of available ${nthr_using} threads"
