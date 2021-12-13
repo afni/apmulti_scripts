@@ -13,7 +13,7 @@ set dout_epi = apmulti_demo/data_00_basic
 
 # ----------------------------------------
 # subject ID (for output)
-set subj  = sub-004
+set subj  = sub-005
 set ses   = ses-01
 
 # available EPI data

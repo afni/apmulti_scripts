@@ -10,7 +10,7 @@
 set din_root    = apmulti_dicom
 set din_droot   = data_00_dicom
 set dout_droot  = data_11_AFNI_EPI
-set subj        = sub-004
+set subj        = sub-005
 set ses         = ses-01
 
 # --------------------------------------------------
