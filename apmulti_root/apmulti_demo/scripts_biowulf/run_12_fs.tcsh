@@ -22,7 +22,7 @@ set ses           = ses-01
 set dir_scr       = $PWD
 set dir_inroot    = ..
 set dir_log       = ${dir_inroot}/logs
-set dir_swarm     = ${dir_inroot}/swarm
+set dir_swarm     = ${dir_inroot}/swarms
 
 # running
 set scr_swarm     = ${dir_swarm}/swarm_${cmd}.txt
