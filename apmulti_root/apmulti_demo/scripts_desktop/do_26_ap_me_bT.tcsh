@@ -2,8 +2,8 @@
 
 # AP: basic, multiecho rest, with blip up/down correction and tedana.py
 
-# Note: The tedana.py called by this script for combine_method = 'OC_tedort'
-#       requires using Python 2.7.
+# Note: The tedana called by this script for combine_method = m_tedana
+#       is from the MEICA group, and requires python 3.6+.
 
 # Process a single subj+ses pair.  Run this script in
 # apmulti_demo/scripts/, via the corresponding run_*tcsh script.
@@ -15,7 +15,7 @@
 # labels
 set subj           = $1
 set ses            = $2
-set ap_label       = 26_ap_me_bm
+set ap_label       = 26_ap_me_bT
 
 set template       = MNI152_2009_template_SSW.nii.gz 
 
@@ -80,7 +80,7 @@ set ap_cmd = ${sdir_ap}/ap.cmd.${subj}
 cat <<EOF >! ${ap_cmd}
 
 # ME:
-#   - -dsets_me_run, -echo_times -combine_method 
+#   - -dsets_me_run, -echo_times, -combine_method
 #   - mask combine blur
 
 afni_proc.py                                                            \
