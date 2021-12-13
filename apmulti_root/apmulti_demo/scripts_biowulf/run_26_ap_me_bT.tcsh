@@ -12,7 +12,7 @@
 # --------------------------------------------------------------------------
 
 # specify script to execute
-set cmd           = 26_ap_me_bm
+set cmd           = 26_ap_me_bT
 
 # labels
 set subj          = sub-005
