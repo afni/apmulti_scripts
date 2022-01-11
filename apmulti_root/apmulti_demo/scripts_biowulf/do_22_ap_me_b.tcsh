@@ -75,7 +75,7 @@ set roi_FSWe      = ${sdir_suma}/fs_ap_wm.nii.gz
 
 # control variables
 set nt_rm         = 4
-set blur_size     = 5
+set blur_size     = 3      # smaller blur, since ME and NL warp
 set final_dxyz    = 3      # can test against inputs
 set cen_motion    = 0.2
 set cen_outliers  = 0.05

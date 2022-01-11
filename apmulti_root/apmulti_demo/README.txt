@@ -58,9 +58,10 @@ Within each script directory are:
 
    run_* scripts  : these are what should be directly run
                   - controls for subjects and biowulf swarming
+                  - these end up executing corresponding do_* scripts
            run_1* : produce output for steps 1, 2 and 3 (noted at the top)
            run_2* : different examples of how one might choose to processes
-                    their data
+                    their data using afni_proc.py
 
    do_*  scripts  : called by the run_* scripts with the same naming
                   - actually perform the detailed processing steps
@@ -90,7 +91,7 @@ do_*/run_* script labels:
    All label characters:
 
       fs     - FreeSurfer
-      sww    - @SSwarper
+      ssw    - @SSwarper
       physio - RetroTS.py processing of physiological time series
       se     - single-echo analysis (echo 2 of 3)
       me     - multi-echo processing (3 echoes)

@@ -1,1 +1,2 @@
 0.1  : 2021 Dec 13 : hopefully mostly ready
+0.2  : 2022 Jan 11 : reduce blur size for tedana cases (5->3)

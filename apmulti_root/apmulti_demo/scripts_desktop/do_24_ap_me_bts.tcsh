@@ -63,7 +63,7 @@ set roi_FSWe      = ${sdir_suma}/fs_ap_wm.nii.gz
 
 # control variables
 set nt_rm         = 4
-set blur_size     = 8
+set blur_size     = 6      # smaller blur, since ME
 set cen_motion    = 0.2
 set cen_outliers  = 0.05
 
