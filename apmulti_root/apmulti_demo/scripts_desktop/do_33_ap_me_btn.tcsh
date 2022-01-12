@@ -3,8 +3,8 @@
 # AP: basic, multiecho rest, with blip up/down correction and tedana.py
 #     --> no blur
 
-# Note: The tedana called by this script for combine_method = m_tedana
-#       is from the MEICA group, and requires python 3.6+.
+# Note: The tedana.py called by this script for combine_method = 'OC_tedort'
+#       requires using Python 2.7.
 
 # Process a single subj+ses pair.  Run this script in
 # apmulti_demo/scripts/, via the corresponding run_*tcsh script.
@@ -16,7 +16,7 @@
 # labels
 set subj           = $1
 set ses            = $2
-set ap_label       = 28_ap_me_bTn
+set ap_label       = 33_ap_me_btn
 
 set template       = MNI152_2009_template_SSW.nii.gz 
 
@@ -64,7 +64,7 @@ set roi_FSWe      = ${sdir_suma}/fs_ap_wm.nii.gz
 
 # control variables
 set nt_rm         = 4
-set blur_size     = 3      # smaller blur, since ME and NL warp
+###set blur_size     = 3      # smaller blur, since ME and NL warp
 set final_dxyz    = 3      # can test against inputs
 set cen_motion    = 0.2
 set cen_outliers  = 0.05
@@ -81,8 +81,10 @@ set ap_cmd = ${sdir_ap}/ap.cmd.${subj}
 cat <<EOF >! ${ap_cmd}
 
 # ME:
-#   - -dsets_me_run, -echo_times, -combine_method
+#   - -dsets_me_run, -echo_times -combine_method -combine_tedort_reject_midk 
 #   - mask combine
+#
+# No blur block (like for ROI-based analysis)
 
 afni_proc.py                                                            \
      -subj_id                  ${subj}                                  \
@@ -100,7 +102,8 @@ afni_proc.py                                                            \
      -blip_reverse_dset        "${epi_reverse}"                         \
      -dsets_me_run             ${dsets_epi_me}                          \
      -echo_times               ${me_times}                              \
-     -combine_method           m_tedana                                 \
+     -combine_method           OC_tedort                                \
+     -combine_tedort_reject_midk  no                                    \
      -tcat_remove_first_trs    ${nt_rm}                                 \
      -tshift_interp            -wsinc9                                  \
      -align_opts_aea           -cost lpc+ZZ -giant_move -check_flip     \

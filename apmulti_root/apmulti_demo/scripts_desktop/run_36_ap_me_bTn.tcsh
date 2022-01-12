@@ -1,6 +1,7 @@
 #!/bin/tcsh
 
 # AP: basic, multiecho rest, with blip up/down correction and tedana.py
+#     -> no blur
 
 # This script runs a corresponding do_*.tcsh script, for a given
 # subj+ses pair.  It could be adapted to loop over many subj+ses values.
@@ -11,7 +12,7 @@
 # --------------------------------------------------------------------------
 
 # specify script to execute
-set cmd           = 27_ap_me_btn
+set cmd           = 36_ap_me_bTn
 
 # labels
 set subj          = sub-005
