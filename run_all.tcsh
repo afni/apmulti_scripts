@@ -27,3 +27,42 @@ tcsh -xef scripts_desktop/do_12_copy_epi.tcsh \
 cd ..
 tcsh -ef scripts_desktop/do_01_dicom2demo.tcsh |& tee log_01_dicom2demo.txt
 \mv log_01_dicom2demo.txt logs
+
+
+# ---------------------------------------------------------------------------
+# extract release demo
+#
+# a. update git repo (not in demo tree)
+# b. make demo tree (exclude temp tgz's and AP result trees):
+#    rsync -av --exclude \*.tgz --exclude \*.results apmulti_demo demo.release
+#    cd demo.release/apmulti_demo
+# c. delete all AP results
+#    rm -fr data_2*
+#    rm logs/???_2*
+#    rm swarms/swarm_2*
+# d. redo script dirs
+#    rm -fr scripts_*
+#    rsync -av $gitdir/apmulti_root/apmulti_demo/ .
+# e. and rename????  (apmulti_demo -> apmulti_demo_01_baic?)
+#    (since there may be other aspects to use in future demos?)
+#    cd ..
+#    mv apmulti_demo apmulti_demo_01_basic
+#
+# The resulting tree is now 1.5G, apmulti_demo.tgz is size 814M.
+# 
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# and re-analyze demo data, to verify
+#
+# we could almost run:
+# ----------------------------------------
+# cd apmulti_demo_01_basic/scripts_biowulf
+# 
+# foreach run ( run_[23]* )
+#    tcsh $run
+# end
+# ----------------------------------------
+#
+# but the 'T' require python3, while python2 works for the rest
+
