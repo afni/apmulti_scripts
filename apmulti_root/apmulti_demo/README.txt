@@ -1,5 +1,9 @@
-This is a sample set of processing scripts to analyze multi-echo data in 
-various ways.  The analysis has basic processing steps:
+
+    **  please see README_process.txt for running the analysis      **
+    **  please post comments or question to the AFNI message board  **
+
+This is a sample set of processing scripts to analyze multi-echo resting
+state data in various ways.  The analysis has basic processing steps:
 
    1. FreeSurfer   : for ROIs and possibly surface mapping
                       - for surface analysis (in one afni_proc.py example)
