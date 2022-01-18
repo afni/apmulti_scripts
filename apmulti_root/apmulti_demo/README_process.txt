@@ -15,6 +15,9 @@ suffient to simply run:
 On biowulf, one can run the similar scripts from the scripts_biowulf
 directory, which include things like swarming and lscratch directory use.
 
+  * the 'run' scripts should be executed from a 'scripts' directory
+    (either scripts_desktop or scripts_biowulf)
+
 ----------------------------------------------------------------------
 The description of the script file naming is in README.txt.
 

@@ -36,8 +36,8 @@ these directories are generate them with the included scripts.
 
    data_12_fs
       - processed from anat
-      - FreeSurfer output
-      - SUMA directory, created by @SUMA_Make_Spec_FS
+      - FreeSurfer output, imported to AFNI/SUMA
+         - SUMA directory, created by @SUMA_Make_Spec_FS
 
    data_13_ssw
       - processed from anat

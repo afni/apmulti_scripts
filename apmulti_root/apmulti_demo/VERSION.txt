@@ -2,4 +2,5 @@
 0.2  : 2022 Jan 11 : reduce blur size for tedana cases (5->3)
 0.3  : 2022 Jan 15 : README*.txt
 1.0  : 2022 Jan 15 : initial release
-
+1.1  : 2022 Jan 18 : updated README*.txt, including 'welcome'
+                   : only SUMA directory is distributed from FS output (size)
