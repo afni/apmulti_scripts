@@ -1,12 +1,19 @@
-
-# input: a single mr directory
+# ===========================================================================
+#
+# Create a new realtime regression testing tree based a a single mr_XXXX
+# directory.  
+#
+# input: a single mr directory (and correspondinng top-level variables)
+#
 # output:
-#    - dicom dirs for 12 vols of a single echo
-#    - dicom dirs for 12 vols of all 3 echoes
-#    - results: run Dimon to create dets for 237 vols
-#    - results: run Dimon to create dets for  12 vols
+#    - dicom dir for 12 vols of a single echo
+#    - dicom dir for 12 vols of all 3 echoes
+#    - results: run Dimon to create dets for all volumes ($total_vols)
+#    - results: run Dimon to create dets for  12 volumes ($nvols)
 #    - results: run AP on 237 volume data
+#               (run InstaCorr and clusterize for ROI mask)
 #    - results: run AP on  12 volume data
+#               (get matching External volreg base from here)
 #    - realtime results tree
 #
 # The realtime results tree will come with:
@@ -16,15 +23,24 @@
 #       - extras:
 #          - make.RT_extras.txt (how extras were made)
 #          - volume registration dset (for test as External)
+#          - alternate volume registration dset (multi-volume, to test)
 #          - (5-value cluster) mask
 #          - surfaces made from the clusters (for kicks)
 
+# ----------------------------------------------------------------------
 # start with directory that has single run of ME data
+# (these would be altered for new data)
 set mrdir = mr_0004
 set nvols = 12
 set nchan = 3
 set odir_dicom = dicom_${nvols}_vols
 set echo_times = ( 12.5 27.6 42.7 )
+set total_vols = 237
+
+
+# ===========================================================================
+# get to work
+# ===========================================================================
 
 # counter for major steps
 set index = 0
@@ -33,7 +49,7 @@ set index = 0
 # create complete results
 
 @ index += 1
-set odir_dimon = results.$index.dimon.237
+set odir_dimon = results.$index.dimon.$total_vols
 mkdir $odir_dimon
 cd $odir_dimon
 
@@ -95,17 +111,17 @@ cd ..
 # ======================================================================
 
 # ----------------------------------------------------------------------
-# now run afni_proc.py on the 237 vol dset
+# now run afni_proc.py on the $total_vols vol dset
 # (for registration comparison and such)
 
 @ index += 1
-set odir = results.$index.AP.237
+set odir = results.$index.AP.$total_vols
 mkdir $odir
 cd $odir
 
-set ddir = results.1.dimon.237
+set ddir = results.1.dimon.$total_vols
 
-set subj = AP.237
+set subj = AP.$total_vols
 # remove 2 TRs, so use 'first' for volreg
 afni_proc.py                     \
    -subj_id $subj                \
