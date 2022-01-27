@@ -1,0 +1,15 @@
+
+# after running instacorr on combine dset
+# no blur, no BP, seedrad 4, polort 2
+
+3dClusterize -nosum -1Dformat             \
+   -inset ./A_ICOR+orig.HEAD              \
+   -idat 0 -ithr 0 -NN 2                  \
+   -clust_nvox 60 -bisided -0.555 0.555   \
+   -pref_map Clust_mask
+
+IsoSurface -input Clust_mask+orig -isorois -o_gii clust
+suma -onestate -i clust*.gii
+SurfQual -i clust.k3.gii
+ConvertSurface -make_consistent -i clust.k3.gii -o surf.fix.k3.gii
+# still has issues...
