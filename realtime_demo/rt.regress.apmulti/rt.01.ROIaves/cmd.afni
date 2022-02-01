@@ -1,6 +1,19 @@
 mkdir -p afni.rt
 cd afni.rt
 
+# ----------------------------------------------------------------------
+# note the locations of extra info (up a level, since in afni.rt dir)
+
+set apdir = ../../RT_input
+set exdir = $apdir/RT_extras
+if ( ! -d $apdir || ! -d $exdir ) then
+   echo "** missing input dir"
+   exit 1
+endif
+
+# ----------------------------------------------------------------------
+# prepare RT environment
+
 setenv AFNI_REALTIME_Registration  3D:_realtime
 setenv AFNI_REALTIME_Base_Image    2
 setenv AFNI_REALTIME_Graph         Realtime
@@ -10,31 +23,11 @@ setenv AFNI_REALTIME_SHOW_TIMES    YES
 setenv AFNI_REALTIME_Mask_Vals     ROI_means
 
 setenv AFNI_REALTIME_Verbose       Very
+setenv AFNI_REALTIME_Mask_Dset     $exdir/Clust_mask+orig
 
-# for ME test
-if ( 1 ) then
-   # up a level, since in afni.rt dir
-   set apdir = ../../RT_input
-   set exdir = $apdir/RT_extras
-   if ( ! -d $apdir || ! -d $exdir ) then
-      echo "** missing input dir"
-      exit 1
-   endif
 
-   # setenv AFNI_REALTIME_Reg_Base_Mode      External_Dataset
-   # setenv AFNI_REALTIME_External_Dataset   $apdir/vr_base_min_outlier+orig
-   # setenv AFNI_REALTIME_Reg_Source_Chan    1
-
-   setenv AFNI_REALTIME_Mask_Dset          $exdir/Clust_mask+orig
-
-   # setenv AFNI_REALTIME_CHMERMODE          optComb
-   # setenv AFNI_REALTIME_CM_REG_MODE        reg_chan
-   # setenv AFNI_REALTIME_CHMERMODE          5
-   # setenv AFNI_REALTIME_CM_REG_MODE        2
-
-   # setenv AFNI_REALTIME_T2star_ref         $apdir/s5.t2.star+orig
-
-endif
+# ----------------------------------------------------------------------
+# run afni
 
 afni -rt -no_detach 
 

@@ -152,6 +152,7 @@ mkdir $odir
 cd $odir
 
 # takes ~3 seconds w/out regress, takes ~25 with
+# align to third and use quintic interpolation to match def ap -rt
 set subj = AP.12
 afni_proc.py                     \
    -subj_id $subj                \
@@ -160,6 +161,9 @@ afni_proc.py                     \
    -echo_times $echo_times       \
    -reg_echo 2                   \
    -volreg_align_to third        \
+   -keep_rm_files \
+   -volreg_interp -quintic       \
+   -volreg_warp_final_interp quintic \
    -combine_method OC            \
    -html_review_style pythonic   \
  |& tee out.run.ap.txt
@@ -171,6 +175,8 @@ tcsh -xef proc.$subj |& tee output.proc.$subj
 # init an RT_extras directory with the vr_base
 mkdir -p ../RT_extras
 cp -p $subj.results/vr_base+orig* ../RT_extras
+cp -p $subj.results/oc.work.r01/s5.t2.star+orig* ../RT_extras
+cp -p $subj.results/full_mask.AP.12+orig* ../RT_extras
 
 cd ..
 
