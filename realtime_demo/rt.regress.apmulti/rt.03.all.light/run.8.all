@@ -12,6 +12,8 @@ endif
 
 echo ++ running receiver ...
 tcsh run.0.reciever >& /dev/null &
+sleep 1
+
 echo ++ running afni ...
 tcsh run.1.afni >& /dev/null &
 echo -- nap 5 ...
@@ -32,3 +34,5 @@ kill -HUP %2
 
 echo -- DONE
 
+echo ""
+sleep 3

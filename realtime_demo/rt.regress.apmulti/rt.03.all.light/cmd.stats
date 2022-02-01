@@ -1,0 +1,36 @@
+
+set dafni = afni.rt
+set dextras = ../RT_input/RT_extras
+set dout  = log
+set label = 3.stats
+
+set inset = $dafni/rt.__001%reg3D+orig
+set mask  = $dextras/Clust_mask+orig
+
+# ROI averages should match those in rt.1, should we test this?
+#
+# Check the data points against those from 3dmaskdump.
+# This should be like ROIs_and_data, except there are non ROIs.
+#
+( 3dmaskdump -quiet -noijk -mask $mask -mrange 1 1 $inset \
+   > $dout/vals.mdump.1D )                                \
+   >& /dev/null
+
+
+# and compare with vals from realtime_reciever.py
+# -- grep 'extras:' vs 'extra2:' from ROIs_and_data
+grep extras: $dout/out.0.rr | cut -d ' ' -f5- | 1dtranspose - - \
+         | 1dcat - - > $dout/vals.rtr.1D
+
+echo ""
+echo "--- testing diff extras (ROI 2...) " 
+diff $dout/vals.*.1D > $dout/diffs.vals.txt
+set rv = $status
+
+echo ""
+if ( $rv ) then
+   echo "   ======= bad: DIFFS ======="
+else
+   echo "   ======= good: identical ======="
+endif
+echo ""

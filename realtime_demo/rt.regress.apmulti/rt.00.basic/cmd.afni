@@ -8,6 +8,8 @@ setenv AFNI_REALTIME_MP_HOST_PORT  localhost:53214
 setenv AFNI_REALTIME_SEND_VER      YES
 setenv AFNI_REALTIME_SHOW_TIMES    YES
 
+setenv AFNI_REALTIME_Mask_Vals     Motion_Only
+
 setenv AFNI_REALTIME_Verbose       Very
 
 afni -rt -no_detach 

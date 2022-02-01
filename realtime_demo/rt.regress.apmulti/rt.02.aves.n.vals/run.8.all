@@ -5,10 +5,14 @@ if ( -f readme.txt ) then
 endif
 
 # possibly clean up from last time
-if ( -f log/out.2.dimon ) then
+if ( -f log/out.0.rr ) then
    echo ++ cleaning up from last time ...
    tcsh run.9.cleanup
 endif
+
+echo ++ running receiver ...
+tcsh run.0.reciever >& /dev/null &
+sleep 1
 
 echo ++ running afni ...
 tcsh run.1.afni >& /dev/null &
@@ -21,8 +25,15 @@ tcsh run.2.dimon >& /dev/null
 echo -- nap 3 ...
 sleep 3
 
-echo -- finished, killing afni ...
+echo ++ running stats...
+tcsh run.3.stats
+
+echo -- killing realtime_receiver.py and afni ...
 kill -HUP %1
+kill -HUP %2
+
 echo -- DONE
 
+echo ""
+sleep 3
 

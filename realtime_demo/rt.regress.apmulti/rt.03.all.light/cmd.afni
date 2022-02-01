@@ -1,0 +1,36 @@
+
+mkdir -p afni.rt
+cd afni.rt
+
+setenv AFNI_REALTIME_Registration  3D:_realtime
+setenv AFNI_REALTIME_Base_Image    2
+setenv AFNI_REALTIME_Graph         Realtime
+setenv AFNI_REALTIME_MP_HOST_PORT  localhost:53214
+setenv AFNI_REALTIME_SEND_VER      YES
+setenv AFNI_REALTIME_SHOW_TIMES    YES
+setenv AFNI_REALTIME_Mask_Vals     All_Data_light
+
+setenv AFNI_REALTIME_Verbose       Very
+
+# for ME test
+if ( 1 ) then
+   set apdir = ../../RT_input
+   set exdir = $apdir/RT_extras
+
+   # setenv AFNI_REALTIME_Reg_Base_Mode      External_Dataset
+   # setenv AFNI_REALTIME_External_Dataset   $apdir/vr_base_min_outlier+orig
+   # setenv AFNI_REALTIME_Reg_Source_Chan    1
+
+   setenv AFNI_REALTIME_Mask_Dset          $exdir/Clust_mask+orig'<1>'
+
+   # setenv AFNI_REALTIME_CHMERMODE          optComb
+   # setenv AFNI_REALTIME_CM_REG_MODE        reg_chan
+   # setenv AFNI_REALTIME_CHMERMODE          5
+   # setenv AFNI_REALTIME_CM_REG_MODE        2
+
+   # setenv AFNI_REALTIME_T2star_ref         $apdir/s5.t2.star+orig
+
+endif
+
+afni -rt -no_detach 
+

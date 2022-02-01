@@ -1,0 +1,2 @@
+realtime_receiver.py -show_data yes -extras_on_one_line yes \
+   |& tee log/out.0.rr
