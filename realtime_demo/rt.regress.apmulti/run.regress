@@ -1,0 +1,66 @@
+# ---------------------------------------------------------------------------
+# to run a regression test:
+# 0. if we have old results, replace in regress tree
+# 1. run all rt.*/run.8.all scripts
+# 2. compare against regress tree
+# ---------------------------------------------------------------------------
+
+# option:   replace, no_clean, clean_regress, clean_rt
+set old = replace
+
+# general
+set dreg = regress         # main old resgression (partial) result tree
+set runall = run.8.all     # script to run all local scripts
+set testfile = $dreg/rt.0.basic/log/out.2.dimon
+
+# ---------------------------------------------------------------------------
+# deal with the prior results
+
+if ( $old == replace ) then
+   echo "-- removing old $dreg dir ..."
+   rm -fr $dreg
+   mkdir -p $dreg
+   echo "-- copying out.[23]* into new $dreg tree ..."
+   cp --parents -p `find rt.?.* -name 'out.[23]*'` $dreg
+
+else if ( $old == clean_regress ) then
+   echo "-- removing old $dreg dir ..."
+   rm -fr $dreg
+   mkdir -p $dreg
+
+# for clean rt, we terminate afterwards
+else if ( $old == clean_rt ) then
+   echo "-- removing old rt.XXX output"
+   foreach dir ( rt.?.* )
+      cd $dir
+      tcsh run.9.cleanup
+      cd ..
+   end
+   exit 0
+endif
+
+
+# ---------------------------------------------------------------------------
+# run analysis
+
+foreach rtdir ( rt.?.* )
+   cd $rtdir
+
+   if ( -f run.8.all ) then
+      tcsh run.8.all
+   endif
+
+   cd -
+end
+
+# ---------------------------------------------------------------------------
+# run regression test (compare new vs old)
+
+if ( -f $testfile ) then
+    cd $dreg
+
+    @diff.files -show rt.*/log/* .. |& tee out.diff.txt
+
+    cd -
+endif
+
