@@ -5,7 +5,10 @@
 # 2. compare against regress tree
 # ---------------------------------------------------------------------------
 
-# option:   replace, no_clean, clean_regress, clean_rt
+# option:   replace, keep, clean_rt
+#           replace  : replace old regr with rt results; run rt; compare
+#           keep     : just run rt and compare (keep old regr)
+#           clean_rt : run cleanup scripts in rt.* dirs
 set old = replace
 
 # general
@@ -22,11 +25,6 @@ if ( $old == replace ) then
    mkdir -p $dreg
    echo "-- copying out.[23]* into new $dreg tree ..."
    cp --parents -p `find rt.?.* -name 'out.[23]*'` $dreg
-
-else if ( $old == clean_regress ) then
-   echo "-- removing old $dreg dir ..."
-   rm -fr $dreg
-   mkdir -p $dreg
 
 # for clean rt, we terminate afterwards
 else if ( $old == clean_rt ) then
