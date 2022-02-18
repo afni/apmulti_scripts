@@ -177,6 +177,24 @@ mkdir -p ../RT_extras
 cp -p $subj.results/vr_base+orig* ../RT_extras
 cp -p $subj.results/oc.work.r01/s5.t2.star+orig* ../RT_extras
 cp -p $subj.results/full_mask.AP.12+orig* ../RT_extras
+cp -p $subj.results/dfile.r01.1D ../RT_extras
+cp -p $subj.results/mat.r01.vr.aff12.1D ../RT_extras
+# 3dbucket -prefix ../RT_extras/vr_base_multi ...
+
+mkdir -p ../nifti_12_vols.e2
+3dTsplit4D -keep_datum -prefix ../nifti_12_vols.e2/e2.nii   \
+          $subj.results/pb00.$subj.r01.e02.tcat+orig
+
+# separate time index 0 from others, for optional globbing
+cd ../nifti_12_vols.e2
+foreach file ( e2.* )
+   set ind = $file:r:e
+   if ( $ind == 00 ) then
+      mv $file e2.0$ind.nii
+   else
+      mv $file e2.1$ind.nii
+   endif
+end
 
 cd ..
 
