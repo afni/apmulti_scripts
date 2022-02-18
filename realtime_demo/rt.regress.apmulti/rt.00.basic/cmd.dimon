@@ -1,4 +1,4 @@
-set TE_list = ( 12.5 27.6 42.7 )
 
 Dimon -rt -no_wait  \
       -infile_pattern "../RT_input/dicom_12_vols.e2/naming*.dcm"
+

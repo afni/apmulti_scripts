@@ -12,7 +12,7 @@
 set old = replace
 
 # general
-set dreg = regress         # main old resgression (partial) result tree
+set dreg = keep.regress    # main old resgression (partial) result tree
 set runall = run.8.all     # script to run all local scripts
 set testfile = $dreg/rt.00.basic/log/out.2.dimon
 
