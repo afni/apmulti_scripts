@@ -1,0 +1,80 @@
+
+
+set dafni = afni.rt
+set dextras = ../RT_input/RT_extras
+set dbasic  = ../rt.00.basic
+set dout  = log
+set label = 3.stats
+
+set rrout = $dout/out.0.rr
+set motfile = log/rstats.rr.1D
+set regset = rt.__001%reg3D+orig
+
+echo ++ formatting ROI averages output from realtime_receiver.py
+grep motion: $rrout                                                     \
+   | awk -F: '{print $2}'                                               \
+   | 1d_tool.py -infile - -write - -write_sep '  ' -write_style ljust   \
+   > $motfile
+
+# monitor errors for final status
+set errs = 0
+
+
+echo "== comparing motion params to basic (DICOM - $dbasic)..."
+echo "-- motfile $motfile :"
+if ( -f $dbasic/$motfile ) then
+   diff $motfile $dbasic/$motfile
+   if ( $status ) then
+      echo "** difference for $motfile"
+      set errs = 1
+   else
+      echo "++ no diffs for $motfile"
+   endif
+else
+   echo "** missing basic $motfile"
+   set errs = 1
+endif
+echo ""
+
+
+echo "== comparing reg dset to basic (DICOM - $dbasic)..."
+echo "-- regset $regset :"
+set mdfile = log/out.max.ts.diff.txt
+( 3dBrickStat -slow -absolute -max \
+      "3dcalc -a $dafni/$regset -b $dbasic/$dafni/$regset -expr a-b" \
+   > $mdfile ) > & /dev/null
+set errs = $status
+set maxdiff = `cat $mdfile`
+echo "-- max diff : $maxdiff"
+if ( $maxdiff > 10 ) then
+   echo "** difference for $regset"
+else
+   echo "++ no diffs for $regset"
+endif
+echo ""
+
+
+cd $dafni
+echo "== comparing reg results with 3dvolreg (they will differ)"
+echo "   RT regset $regset"
+3dvolreg -base ../../RT_input/RT_extras/vr_base+orig  \
+   -1Dfile dfile.rt.1D -1Dmatrix_save mat.rt.1D       \
+   -quintic -prefix vr.e2 rt.__001+orig
+
+set mdfile = out.max.ts.diff.txt
+( 3dBrickStat -slow -absolute -max \
+      "3dcalc -a $regset -b vr.e2+orig -expr a-b" \
+   > $mdfile ) > & /dev/null
+echo ""
+echo "-- vr max diffs: `cat $mdfile`"
+echo ""
+cd ..
+
+
+if ( ! $errs ) then
+   echo "=== good: no issues in NIFTI-land"
+else
+   echo "=== warning, issues in NIFTI-land"
+endif
+echo ""
+
