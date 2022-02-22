@@ -85,9 +85,9 @@ afni_proc.py                                                            \
      -copy_anat                ${anat_cp}                               \
      -anat_has_skull           yes                                      \
      -dsets                    ${dsets_epi}                             \
+     -blip_forward_dset        ${epi_forward}                           \
+     -blip_reverse_dset        ${epi_reverse}                           \
      -align_opts_aea           -cost lpc+ZZ -giant_move                 \
-     -blip_forward_dset        "${epi_forward}"                         \
-     -blip_reverse_dset        "${epi_reverse}"                         \
      -volreg_align_to          MIN_OUTLIER                              \
      -volreg_align_e2a                                                  \
      -volreg_warp_dxyz         ${final_dxyz}                            \
