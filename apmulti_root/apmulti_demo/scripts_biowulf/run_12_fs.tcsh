@@ -41,7 +41,7 @@ endif
 
 # --------------------------------------------------------------------------
 
-set log = ${cdir_log}/log_${cmd}_${subj}.txt   # _${ses}
+set log = ${cdir_log}/log_${cmd}_${subj}_${ses}.txt
 
 # run command script (verbosely, and don't use '-e'); log terminal text.
 cat <<EOF >> ${scr_swarm}
