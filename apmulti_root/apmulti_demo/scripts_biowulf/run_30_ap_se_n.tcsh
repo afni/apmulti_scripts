@@ -26,12 +26,14 @@ set dir_log       = ${dir_inroot}/logs
 set dir_swarm     = ${dir_inroot}/swarms
 
 # running
+set cdir_log      = ${dir_log}/logs_${cmd}
 set scr_swarm     = ${dir_swarm}/swarm_${cmd}.txt
+set scr_cmd       = ${dir_scr}/do_${cmd}.tcsh
 
 # --------------------------------------------------------------------------
 
+\mkdir -p ${cdir_log}
 \mkdir -p ${dir_swarm}
-\mkdir -p ${dir_log}
 
 # clear away older swarm script 
 if ( -e ${scr_swarm} ) then
@@ -40,14 +42,14 @@ endif
 
 # --------------------------------------------------------------------------
 
-# run command script (verbosely, and don't use '-e'); log terminal text.
+set log = ${cdir_log}/log_${cmd}_${subj}.txt   # _${ses}
 
+# run command script (verbosely, and don't use '-e'); log terminal text.
 cat <<EOF >> ${scr_swarm}
-tcsh -xf ${dir_scr}/do_${cmd}.tcsh  ${subj} ${ses} |& tee ${dir_log}/log_${cmd}_${subj}_${ses}.txt
+tcsh -xf ${scr_cmd} ${subj} ${ses} |& tee ${log}
 EOF
 
 echo "++ And start swarming: ${scr_swarm}"
-
 swarm                                                              \
     -f ${scr_swarm}                                                \
     --partition=norm,quick                                         \
@@ -55,7 +57,7 @@ swarm                                                              \
     --gb-per-process=10                                            \
     --time=03:59:00                                                \
     --gres=lscratch:10                                             \
-    --logdir=${dir_log}                                            \
+    --logdir=${cdir_log}                                           \
     --job-name=job_${cmd}                                          \
     --merge-output                                                 \
     --usecsh
