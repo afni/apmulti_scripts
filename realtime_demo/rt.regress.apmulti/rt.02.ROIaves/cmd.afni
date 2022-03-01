@@ -1,0 +1,37 @@
+mkdir -p afni.rt
+cd afni.rt
+
+# ----------------------------------------------------------------------
+# note the locations of extra info (up a level, since in afni.rt dir)
+
+set apdir = ../../RT_input
+set exdir = $apdir/RT_extras
+if ( ! -d $apdir || ! -d $exdir ) then
+   echo "** missing input dir"
+   exit 1
+endif
+
+# ----------------------------------------------------------------------
+# prepare RT environment
+
+# setenv AFNI_REALTIME_Base_Image      2
+setenv AFNI_REALTIME_Registration      3D:_realtime
+setenv AFNI_REALTIME_Reg_Base_Mode     External_Dataset
+setenv AFNI_REALTIME_External_Dataset  $exdir/vr_base+orig
+setenv AFNI_REALTIME_Base_Image        0
+
+setenv AFNI_REALTIME_Graph         Realtime
+setenv AFNI_REALTIME_MP_HOST_PORT  localhost:53214
+setenv AFNI_REALTIME_SEND_VER      YES
+setenv AFNI_REALTIME_SHOW_TIMES    YES
+setenv AFNI_REALTIME_Mask_Vals     ROI_means
+
+setenv AFNI_REALTIME_Verbose       Very
+setenv AFNI_REALTIME_Mask_Dset     $exdir/Clust_mask+orig
+
+
+# ----------------------------------------------------------------------
+# run afni
+
+afni -rt -no_detach 
+

@@ -1,0 +1,3 @@
+
+tcsh cmd.stats |& tee log/out.3.stats
+

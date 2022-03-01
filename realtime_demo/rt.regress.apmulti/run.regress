@@ -1,0 +1,2 @@
+
+tcsh cmd.regress |& tee out.cmd.regress

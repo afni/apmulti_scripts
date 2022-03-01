@@ -1,0 +1,2 @@
+
+tcsh -x cmd.dimon |& tee log/out.2.dimon

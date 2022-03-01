@@ -1,0 +1,32 @@
+
+
+set dafni = afni.rt
+set dextras = ../RT_input/RT_extras
+set dout  = log
+set label = 3.stats
+
+set rrout = $dout/out.0.rr
+set motfile = log/rstats.rr.1D
+
+echo ++ formatting ROI averages output from realtime_receiver.py
+grep motion: $rrout                                                     \
+   | awk -F: '{print $2}'                                               \
+   | 1d_tool.py -infile - -write - -write_sep '  ' -write_style ljust   \
+   > $motfile
+
+echo "--- testing size of :" $motfile
+set cmd = ( 1d_tool.py -show_rows_cols -verb 0 -infile $motfile )
+echo $cmd
+set rc = ( `$cmd` )
+
+if ( $rc[2] == 6 ) then
+   echo "=== good: have 6 columns of motion params"
+else
+   echo "=== warning, missing motion from $rrout"
+   echo ""
+   echo " -- top 5 lines shows:"
+   echo ""
+   head -n 5 $rrout
+endif
+echo ""
+

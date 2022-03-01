@@ -1,0 +1,50 @@
+
+
+set dafni = afni.rt
+set dextras = ../RT_input/RT_extras
+set dout  = log
+set label = 3.stats
+
+set inset = $dafni/rt.__001%reg3D+orig
+set mask  = $dextras/Clust_mask+orig
+
+echo ++ running 3dROIstats on registered time series
+( 3dROIstats -quiet -mask $mask $inset   \
+   | 1d_tool.py -infile - -write - -write_sep '  ' -write_style ljust   \
+   > log/rstats.maskave.1D ) >& log/err.maskave
+
+echo ++ formatting ROI averages output from realtime_receiver.py
+grep extras $dout/out.0.rr             \
+   | cut -d ' ' -f5-                   \
+   | 1d_tool.py -infile - -write - -write_sep '  ' -write_style ljust   \
+   > $dout/rstats.rr.1D
+
+# note: 3dROIstats -quiet -mask $mask -nzvoxels $mask
+
+# match against RT output via realtime_receiver.py
+#
+#    grep extras log/out.0.rr | awk -F: '{print $2}' | 1dcat 1D:stdin
+
+
+echo "--- testing diff of :" log/rstats*.1D
+diff log/rstats*.1D > log/rstats.diff.txt
+
+if ( $status ) then
+   set tol = 0.1
+   echo "=== warning, diff seen: testing with 3dDiff ..."
+   echo ""
+   set cmd = ( 3dDiff -tol $tol -q \
+                      -a log/rstats.rr.1D -b log/rstats.maskave.1D )
+   echo $cmd
+   echo ""
+   set res = ( `$cmd` )
+   if ( $res ) then
+       echo "*** BAD: diff seen at -tol $tol"
+   else
+       echo "=== good: not identical, but within -tol $tol"
+   endif
+else
+   echo "=== good: identical"
+endif
+echo ""
+

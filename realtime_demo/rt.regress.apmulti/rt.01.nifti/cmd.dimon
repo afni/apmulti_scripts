@@ -1,0 +1,6 @@
+
+
+Dimon -rt -no_wait            \
+      -tr 2 -file_type AFNI   \
+      -infile_pattern "../RT_input/nifti_12_vols.e2/e2.*.nii"
+

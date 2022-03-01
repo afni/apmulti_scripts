@@ -1,0 +1,39 @@
+
+# display background information for this test
+if ( -f readme.txt ) then
+   grep -v '#' readme.txt
+endif
+
+# possibly clean up from last time
+if ( -f log/out.0.rr ) then
+   echo ++ cleaning up from last time ...
+   tcsh run.9.cleanup
+endif
+
+echo ++ running receiver ...
+tcsh run.0.reciever >& /dev/null &
+sleep 1
+
+echo ++ running afni ...
+tcsh run.1.afni >& /dev/null &
+echo -- nap 5 ...
+sleep 5
+
+echo ++ running Dimon ...
+tcsh run.2.dimon >& /dev/null
+
+echo -- nap 3 ...
+sleep 3
+
+echo ++ running stats...
+tcsh run.3.stats
+
+echo -- killing realtime_receiver.py and afni ...
+kill -HUP %1
+kill -HUP %2
+
+echo -- DONE
+
+echo ""
+sleep 3
+
