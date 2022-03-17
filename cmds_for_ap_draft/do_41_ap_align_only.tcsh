@@ -43,6 +43,9 @@ setenv AFNI_COMPRESSOR GZIP
 # dataset inputs
 set dsets_epi     = ( ${sdir_epi}/${subj}_${ses}_task-rest_*_echo-2_bold.nii* )
 
+set epi_forward   = "${sdir_epi}/${subj}_${ses}_acq-blip_dir-match_run-1_bold.nii.gz[0]"
+set epi_reverse   = "${sdir_epi}/${subj}_${ses}_acq-blip_dir-opp_run-1_bold.nii.gz[0]"
+
 set anat_cp       = ${sdir_ssw}/anatSS.${subj}.nii
 set anat_skull    = ${sdir_ssw}/anatU.${subj}.nii
 
@@ -82,6 +85,8 @@ afni_proc.py                                                            \
      -anat_has_skull           no                                       \
      -anat_follower            anat_w_skull anat ${anat_skull}          \
      -dsets                    ${dsets_epi}                             \
+     -blip_forward_dset        "${epi_forward}"                         \
+     -blip_reverse_dset        "${epi_reverse}"                         \
      -tcat_remove_first_trs    ${nt_rm}                                 \
      -align_opts_aea           -cost lpc+ZZ -giant_move -check_flip     \
      -tlrc_base                ${template}                              \
