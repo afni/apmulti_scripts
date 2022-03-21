@@ -4,3 +4,6 @@
 1.0  : 2022 Jan 15 : initial release
 1.1  : 2022 Jan 18 : updated README*.txt, including 'welcome'
                    : only SUMA directory is distributed from FS output (size)
+1.2  : 2022 Mar 21 : scripts_biowulf/do*.tcsh reset dir grp for better perms
+                     scripts_biowulf/run*.tcsh use subdir in logs/
+                     scripts_desktop/run*.tcsh use subdir in logs/
