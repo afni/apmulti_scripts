@@ -68,6 +68,10 @@ if ( -d /lscratch/$SLURM_JOBID ) then
     set usetemp  = 1
     set sdir_BW  = ${sdir_fs}
     set sdir_fs  = /lscratch/$SLURM_JOBID/${subj}_${ses}
+
+    # prep for group permission reset
+    \mkdir -p ${sdir_BW}
+    set grp_own  = `\ls -ld ${sdir_BW} | awk '{print $4}'`
 else
     set usetemp  = 0
 endif
@@ -120,8 +124,10 @@ if( ${usetemp} && -d ${sdir_fs} ) then
     echo "++ Used /lscratch"
     echo "++ Copy from: ${sdir_fs}"
     echo "          to: ${sdir_BW}"
-    \mkdir -p ${sdir_BW}
     \cp -pr   ${sdir_fs}/* ${sdir_BW}/.
+
+    # reset group permission
+    chgrp -R ${grp_own} ${sdir_BW}
 endif
 # ---------------------------------------------------------------------------
 
