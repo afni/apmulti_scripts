@@ -19,18 +19,25 @@ set subj          = sub-005
 set ses           = ses-01
 
 # upper directories
+set dir_scr       = $PWD
 set dir_inroot    = ..
 set dir_log       = ${dir_inroot}/logs
+
+# running
+set cdir_log      = ${dir_log}/logs_${cmd}
+set scr_cmd       = ${dir_scr}/do_${cmd}.tcsh
 
 # --------------------------------------------------------------------------
 
 # make directory for storing text files to log the processing
-\mkdir -p ${dir_log}
+\mkdir -p ${cdir_log}
 
 # --------------------------------------------------------------------------
 
+set log = ${cdir_log}/log_${cmd}_${subj}_${ses}.txt
+
 # run command script (verbosely and stop at any failure); log terminal text.
 
-tcsh -xef do_${cmd}.tcsh  ${subj} ${ses}                           \
-    |& tee ${dir_log}/log_${cmd}_${subj}_${ses}.txt
+tcsh -xf ${scr_cmd} ${subj} ${ses} |& tee ${log}
+
 

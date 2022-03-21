@@ -22,13 +22,21 @@ set dir_scr       = $PWD
 set dir_inroot    = ..
 set dir_log       = ${dir_inroot}/logs
 
+# running
+set cdir_log      = ${dir_log}/logs_${cmd}
+set scr_cmd       = ${dir_scr}/do_${cmd}.tcsh
+
 # --------------------------------------------------------------------------
 
-\mkdir -p ${dir_log}
+# make directory for storing text files to log the processing
+\mkdir -p ${cdir_log}
 
 # --------------------------------------------------------------------------
 
-# run command script (verbosely, and don't use '-e'); log terminal text.
+set log = ${cdir_log}/log_${cmd}_${subj}_${ses}.txt
 
-tcsh -xf ${dir_scr}/do_${cmd}.tcsh  ${subj} ${ses} |& tee ${dir_log}/log_${cmd}_${subj}_${ses}.txt
+# run command script (verbosely and stop at any failure); log terminal text.
+
+tcsh -xf ${scr_cmd} ${subj} ${ses} |& tee ${log}
+
 
