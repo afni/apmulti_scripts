@@ -13,7 +13,7 @@
 # labels
 set subj           = $1
 set ses            = $2
-set ap_label       = 40_ap_se
+set ap_label       = 43_ap_se
 
 set template       = MNI152_2009_template_SSW.nii.gz 
 
