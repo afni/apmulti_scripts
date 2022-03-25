@@ -184,7 +184,7 @@ if( ${usetemp} && -d ${sdir_ap} ) then
     echo "++ Used /lscratch"
     echo "++ Copy from: ${sdir_ap}"
     echo "          to: ${sdir_BW}"
-    \cp -pr   ${sdir_ssw}/* ${sdir_BW}/.
+    \cp -pr   ${sdir_ap}/* ${sdir_BW}/.
 
     # reset group permission
     chgrp -R ${grp_own} ${sdir_BW}
