@@ -1,6 +1,7 @@
 #!/usr/bin/env tcsh
 
-# AP: example for draft, Ex. 1
+# AP: basic, single echo rest
+# For AP paper, ex 3
 
 # Process a single subj+ses pair.  Run this script in
 # apmulti_demo/scripts/, via the corresponding run_*tcsh script.
@@ -27,7 +28,7 @@ set ecode = 0
 # labels
 set subj           = $1
 set ses            = $2
-set ap_label       = 41_ap_ex1
+set ap_label       = 43_ap_ex3
 
 set template       = MNI152_2009_template_SSW.nii.gz 
 
@@ -58,9 +59,6 @@ setenv AFNI_COMPRESSOR GZIP
 # dataset inputs
 set dsets_epi     = ( ${sdir_epi}/${subj}_${ses}_task-rest_*_echo-2_bold.nii* )
 
-set epi_forward   = "${sdir_epi}/${subj}_${ses}_acq-blip_dir-match_run-1_bold.nii.gz[0]"
-set epi_reverse   = "${sdir_epi}/${subj}_${ses}_acq-blip_dir-opp_run-1_bold.nii.gz[0]"
-
 set anat_cp       = ${sdir_ssw}/anatSS.${subj}.nii
 set anat_skull    = ${sdir_ssw}/anatU.${subj}.nii
 
@@ -81,7 +79,7 @@ set physio_regs   = ${physio_prefix}_task-rest_run-1_physio.slibase.1D
 
 # control variables
 set nt_rm         = 4
-set blur_size     = 5   
+###set blur_size     = 5   # no blurring here
 set final_dxyz    = 3      # can test against inputs
 set cen_motion    = 0.2
 set cen_outliers  = 0.05
@@ -112,19 +110,34 @@ set ap_cmd = ${sdir_ap}/ap.cmd.${subj}
 # write AP command to file
 cat <<EOF >! ${ap_cmd}
 
-# might further remove some options here, like TSNR?
+# no blur: ROI-based, volumetric
+# use fanaticor with WMe and PC ventricles (both from FS)
+# include physio regressors
+# include GM-ROIs from FS (both 2000 and 2009 parc)
+
+# we do NOT include bandpassing here (see comments in text
 
 afni_proc.py                                                            \
      -subj_id                  ${subj}                                  \
-     -blocks                   align tlrc volreg                        \
+     -blocks despike ricor tshift align tlrc volreg mask scale regress  \
      -radial_correlate_blocks  tcat volreg                              \
      -copy_anat                ${anat_cp}                               \
      -anat_has_skull           no                                       \
      -anat_follower            anat_w_skull anat ${anat_skull}          \
+     -anat_follower_ROI        aaseg        anat ${roi_all_2009}        \
+     -anat_follower_ROI        aeseg        epi  ${roi_all_2009}        \
+     -anat_follower_ROI        aagm09       anat ${roi_gmrois_2009}     \
+     -anat_follower_ROI        aegm09       epi  ${roi_gmrois_2009}     \
+     -anat_follower_ROI        aagm00       anat ${roi_gmrois_2000}     \
+     -anat_follower_ROI        aegm00       epi  ${roi_gmrois_2000}     \
+     -anat_follower_ROI        FSvent       epi  ${roi_FSvent}          \
+     -anat_follower_ROI        FSWe         epi  ${roi_FSWe}            \
+     -anat_follower_erode      FSvent FSWe                              \
      -dsets                    ${dsets_epi}                             \
-     -blip_forward_dset        "${epi_forward}"                         \
-     -blip_reverse_dset        "${epi_reverse}"                         \
      -tcat_remove_first_trs    ${nt_rm}                                 \
+     -ricor_regs               ${physio_regs}                           \
+     -ricor_regs_nfirst        ${nt_rm}                                 \
+     -ricor_regress_method     per-run                                  \
      -align_opts_aea           -cost lpc+ZZ -giant_move -check_flip     \
      -tlrc_base                ${template}                              \
      -tlrc_NL_warp                                                      \
@@ -133,7 +146,20 @@ afni_proc.py                                                            \
      -volreg_align_e2a                                                  \
      -volreg_tlrc_warp                                                  \
      -volreg_warp_dxyz         ${final_dxyz}                            \
-     -volreg_compute_tsnr      yes
+     -volreg_compute_tsnr      yes                                      \
+     -mask_epi_anat            yes                                      \
+     -regress_motion_per_run                                            \
+     -regress_ROI_PC FSvent    3                                        \
+     -regress_ROI_PC_per_run   FSvent                                   \
+     -regress_make_corr_vols   aeseg FSvent                             \
+     -regress_anaticor_fast                                             \
+     -regress_anaticor_label   FSWe                                     \
+     -regress_censor_motion    ${cen_motion}                            \
+     -regress_censor_outliers  ${cen_outliers}                          \
+     -regress_apply_mot_types  demean deriv                             \
+     -regress_est_blur_epits                                            \
+     -regress_est_blur_errts                                            \
+     -html_review_style        pythonic                                                                                                       
 
 EOF
 
