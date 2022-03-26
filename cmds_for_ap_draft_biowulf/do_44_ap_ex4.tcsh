@@ -13,6 +13,19 @@
 source /etc/profile.d/modules.csh
 module load afni 
 
+# need external prog 'tedana' too;  perhaps using conda similar to:
+### source /data/NIMH_SSCC/ptaylor/miniconda/etc/profile.d/conda.csh
+### conda activate env_tedana
+### conda env list
+
+echo `which tedana`
+if ( $status ) then
+    echo "** ERROR: 'tedana' not loaded, installed or found."
+    echo "   Did you forget to start a conda env or something?"
+    set ecode = 1
+    goto COPY_AND_EXIT
+endif
+
 # set N_threads for OpenMP
 # + consider using up to 16 threads (alignment programs are parallelized)
 setenv OMP_NUM_THREADS $SLURM_CPUS_PER_TASK
