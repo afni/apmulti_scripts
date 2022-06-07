@@ -28,6 +28,8 @@ The basic input is a BIDS-formatted tree for just a single subject/session:
       physio : func/sub-005_ses-01_task-rest_run-1_physio-ECG.txt
       physio : func/sub-005_ses-01_task-rest_run-1_physio-Resp.txt
 
+   note: echo times (in ms) are : 12.5 27.6 42.7
+
 
 ---------------------------------------------
 The results from steps 1, 2 and 3 (above) will be distributed for convenience.
