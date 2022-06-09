@@ -98,7 +98,6 @@ afni_proc.py                                                            \
      -volreg_tlrc_warp                                                  \
      -volreg_warp_dxyz         ${final_dxyz}                            \
      -volreg_compute_tsnr      yes                                      \
-     -blur_size                ${blur_size}                             \
      -mask_epi_anat            yes                                      \
      -regress_motion_per_run                                            \
      -regress_ROI_PC FSvent    3                                        \
