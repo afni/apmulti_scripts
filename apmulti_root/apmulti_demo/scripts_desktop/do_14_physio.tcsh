@@ -63,7 +63,7 @@ set physio_resp = ${subj}_${ses}_${task_label}-Resp.txt
 # control variables
 
 # check available N_threads and report what is being used
-set nthr_avail = `afni_system_check.py -disp_num_cpu'`
+set nthr_avail = `afni_system_check.py -disp_num_cpu`
 set nthr_using = `afni_check_omp`
 
 echo "++ INFO: Using ${nthr_avail} of available ${nthr_using} threads"
