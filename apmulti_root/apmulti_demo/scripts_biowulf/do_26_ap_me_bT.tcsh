@@ -4,6 +4,8 @@
 
 # Note: The tedana called by this script for combine_method = m_tedana
 #       is from the MEICA group, and requires python 3.6+.
+#       This tedana program is now available on biowulf with the included
+#       'module load ...' command.
 
 # Process a single subj+ses pair.  Run this script in
 # apmulti_demo/scripts/, via the corresponding run_*tcsh script.
@@ -14,7 +16,7 @@
 
 # load modules
 source /etc/profile.d/modules.csh
-module load afni 
+module load afni tedana
 
 # set N_threads for OpenMP
 # + consider using up to 16 threads (alignment programs are parallelized)
