@@ -30,7 +30,6 @@ The basic input is a BIDS-formatted tree for just a single subject/session:
 
    note: echo times (in ms) are : 12.5 27.6 42.7
 
-
 ---------------------------------------------
 The results from steps 1, 2 and 3 (above) will be distributed for convenience.
 Scripts to generate these initial results are included.  Feel free to (re)move
