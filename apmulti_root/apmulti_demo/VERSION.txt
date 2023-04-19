@@ -8,3 +8,4 @@
                      scripts_biowulf/run*.tcsh use subdir in logs/
                      scripts_desktop/run*.tcsh use subdir in logs/
 1.3  : 2022 Jun  7 : put echo times in README_contents.txt: 12.5 27.6 42.7
+1.4  : 2023 Apr 19 : added scripts_*/*40*
