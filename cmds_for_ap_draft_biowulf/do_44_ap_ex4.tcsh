@@ -1,6 +1,7 @@
 #!/usr/bin/env tcsh
 
 # AP: for AP draft, ex 4
+# -> now with local epi unifize
 
 # Process a single subj+ses pair.  Run this script in
 # apmulti_demo/scripts/, via the corresponding run_*tcsh script.
@@ -145,6 +146,7 @@ afni_proc.py                                                            \
      -combine_method           m_tedana                                 \
      -tcat_remove_first_trs    ${nt_rm}                                 \
      -tshift_interp            -wsinc9                                  \
+     -align_unifize_epi        local                                    \
      -align_opts_aea           -cost lpc+ZZ -giant_move -check_flip     \
      -volreg_align_to          MIN_OUTLIER                              \
      -volreg_align_e2a                                                  \
@@ -199,8 +201,9 @@ if( ${usetemp} && -d ${sdir_ap} ) then
     echo "          to: ${sdir_BW}"
     \cp -pr   ${sdir_ap}/* ${sdir_BW}/.
 
-    # reset group permission
+    # reset group permission and writeability
     chgrp -R ${grp_own} ${sdir_BW}
+    chmod -R g+w ${sdir_BW}
 endif
 
 # ---------------------------------------------------------------------------

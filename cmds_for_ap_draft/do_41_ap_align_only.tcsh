@@ -88,6 +88,7 @@ afni_proc.py                                                            \
      -blip_forward_dset        "${epi_forward}"                         \
      -blip_reverse_dset        "${epi_reverse}"                         \
      -tcat_remove_first_trs    ${nt_rm}                                 \
+     -align_unifize_epi        local                                    \
      -align_opts_aea           -cost lpc+ZZ -giant_move -check_flip     \
      -tlrc_base                ${template}                              \
      -tlrc_NL_warp                                                      \

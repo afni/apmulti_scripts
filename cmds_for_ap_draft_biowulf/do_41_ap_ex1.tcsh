@@ -125,6 +125,7 @@ afni_proc.py                                                            \
      -blip_forward_dset        "${epi_forward}"                         \
      -blip_reverse_dset        "${epi_reverse}"                         \
      -tcat_remove_first_trs    ${nt_rm}                                 \
+     -align_unifize_epi        local                                    \
      -align_opts_aea           -cost lpc+ZZ -giant_move -check_flip     \
      -tlrc_base                ${template}                              \
      -tlrc_NL_warp                                                      \
@@ -176,8 +177,9 @@ if( ${usetemp} && -d ${sdir_ap} ) then
     echo "          to: ${sdir_BW}"
     \cp -pr   ${sdir_ap}/* ${sdir_BW}/.
 
-    # reset group permission
+    # reset group permission and writeability
     chgrp -R ${grp_own} ${sdir_BW}
+    chmod -R g+w ${sdir_BW}
 endif
 
 # ---------------------------------------------------------------------------

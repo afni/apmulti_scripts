@@ -104,6 +104,7 @@ afni_proc.py                                                            \
      -combine_method           m_tedana                                 \
      -tcat_remove_first_trs    ${nt_rm}                                 \
      -tshift_interp            -wsinc9                                  \
+     -align_unifize_epi        local                                    \
      -align_opts_aea           -cost lpc+ZZ -giant_move -check_flip     \
      -volreg_align_to          MIN_OUTLIER                              \
      -volreg_align_e2a                                                  \

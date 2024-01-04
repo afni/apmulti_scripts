@@ -106,6 +106,7 @@ afni_proc.py                                                            \
      -ricor_regs               ${physio_regs}                           \
      -ricor_regs_nfirst        ${nt_rm}                                 \
      -ricor_regress_method     per-run                                  \
+     -align_unifize_epi        local                                    \
      -align_opts_aea           -cost lpc+ZZ -giant_move -check_flip     \
      -tlrc_base                ${template}                              \
      -tlrc_NL_warp                                                      \
