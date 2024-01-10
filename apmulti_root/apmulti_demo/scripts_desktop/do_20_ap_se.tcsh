@@ -74,7 +74,7 @@ cat <<EOF >! ${ap_cmd}
 
 afni_proc.py                                                            \
      -subj_id                  ${subj}                                  \
-     -blocks despike tshift align tlrc volreg blur mask scale regress   \
+     -blocks despike tshift align tlrc volreg mask blur scale regress   \
      -radial_correlate_blocks  tcat volreg                              \
      -copy_anat                ${anat_cp}                               \
      -anat_has_skull           no                                       \
