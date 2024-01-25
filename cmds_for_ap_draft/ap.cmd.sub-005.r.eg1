@@ -1,0 +1,36 @@
+
+# might further remove some options here, like TSNR?
+
+set d_ssw       = data/ssw
+set d_suma      = data/SUMA
+set d_func      = data/func
+set d_phys      = data/physio
+
+
+afni_proc.py                                                                \
+    -subj_id                  sub-005.eg1                                   \
+    -blocks                   align tlrc volreg regress                     \
+    -radial_correlate_blocks  tcat volreg                                   \
+    -copy_anat                $d_ssw/anatSS.sub-005.nii                     \
+    -anat_has_skull           no                                            \
+    -anat_follower            anat_w_skull anat $d_ssw/anatU.sub-005.nii    \
+    -dsets                    $d_func/sub-005_rest_echo-2_bold.nii.gz       \
+    -blip_forward_dset        "$d_func/sub-005_blip-match_bold.nii.gz[0]"   \
+    -blip_reverse_dset        "$d_func/sub-005_blip-opp_bold.nii.gz[0]"     \
+    -tcat_remove_first_trs    4                                             \
+    -align_unifize_epi        local                                         \
+    -align_opts_aea           -cost lpc+ZZ                                  \
+                              -giant_move                                   \
+                              -check_flip                                   \
+    -tlrc_base                MNI152_2009_template_SSW.nii.gz               \
+    -tlrc_NL_warp                                                           \
+    -tlrc_NL_warped_dsets     $d_ssw/anatQQ.sub-005.nii                     \
+                              $d_ssw/anatQQ.sub-005.aff12.1D                \
+                              $d_ssw/anatQQ.sub-005_WARP.nii                \
+    -volreg_align_to          MIN_OUTLIER                                   \
+    -volreg_align_e2a                                                       \
+    -volreg_tlrc_warp                                                       \
+    -volreg_warp_dxyz         3                                             \
+    -volreg_compute_tsnr      yes
+
+

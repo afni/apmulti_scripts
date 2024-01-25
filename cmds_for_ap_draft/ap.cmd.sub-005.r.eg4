@@ -1,0 +1,55 @@
+
+# blip up/down (B0 distortion) correction applied
+# surface-based analysis
+# ME combine method: MEICA-group tedana
+
+set d_ssw       = data/ssw
+set d_suma      = data/SUMA
+set d_func      = data/func
+set d_phys      = data/physio
+
+ afni_proc.py                                                                \
+     -subj_id                   sub-005.eg4                                  \
+     -blocks                    tshift align volreg mask combine surf blur   \
+                                scale regress                                \
+     -radial_correlate_blocks   tcat volreg                                  \
+     -copy_anat                 $d_ssw/anatSS.sub-005.nii                    \
+     -anat_has_skull            no                                           \
+     -anat_follower             anat_w_skull anat $d_ssw/anatU.sub-005.nii   \
+     -anat_follower_ROI         aaseg anat                                   \
+                                $d_suma/aparc.a2009s+aseg_REN_all.nii.gz     \
+     -anat_follower_ROI         aeseg epi                                    \
+                                $d_suma/aparc.a2009s+aseg_REN_all.nii.gz     \
+     -anat_follower_ROI         FSvent epi $d_suma/fs_ap_latvent.nii.gz      \
+     -anat_follower_ROI         FSWe epi $d_suma/fs_ap_wm.nii.gz             \
+     -anat_follower_erode       FSvent FSWe                                  \
+     -surf_anat                 $d_suma/sub-005_SurfVol.nii                  \
+     -surf_spec                 $d_suma/std.141.sub-005_lh.spec              \
+                                $d_suma/std.141.sub-005_rh.spec              \
+     -blip_forward_dset         "$d_func/sub-005_blip-match_bold.nii.gz[0]"  \
+     -blip_reverse_dset         "$d_func/sub-005_blip-opp_bold.nii.gz[0]"    \
+     -dsets_me_run              $d_func/sub-005_rest_echo-1_bold.nii.gz      \
+                                $d_func/sub-005_rest_echo-2_bold.nii.gz      \
+                                $d_func/sub-005_rest_echo-3_bold.nii.gz      \
+     -echo_times                12.5 27.6 42.7                               \
+     -combine_method            m_tedana                                     \
+     -tcat_remove_first_trs     4                                            \
+     -tshift_interp             -wsinc9                                      \
+     -align_unifize_epi         local                                        \
+     -align_opts_aea            -cost lpc+ZZ                                 \
+                                -giant_move                                  \
+                                -check_flip                                  \
+     -volreg_align_to           MIN_OUTLIER                                  \
+     -volreg_align_e2a                                                       \
+     -volreg_warp_final_interp  wsinc5                                       \
+     -volreg_compute_tsnr       yes                                          \
+     -blur_size                 4                                            \
+     -mask_epi_anat             yes                                          \
+     -regress_motion_per_run                                                 \
+     -regress_make_corr_vols    aeseg FSvent                                 \
+     -regress_censor_motion     0.2                                          \
+     -regress_censor_outliers   0.05                                         \
+     -regress_apply_mot_types   demean deriv                                 \
+     -html_review_style         pythonic
+
+
