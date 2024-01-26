@@ -10,7 +10,6 @@ set d_phys      = data/physio
 afni_proc.py                                                                \
     -subj_id                  sub-005.eg1                                   \
     -blocks                   align tlrc volreg regress                     \
-    -radial_correlate_blocks  tcat volreg                                   \
     -copy_anat                $d_ssw/anatSS.sub-005.nii                     \
     -anat_has_skull           no                                            \
     -anat_follower            anat_w_skull anat $d_ssw/anatU.sub-005.nii    \
@@ -30,7 +29,6 @@ afni_proc.py                                                                \
     -volreg_align_to          MIN_OUTLIER                                   \
     -volreg_align_e2a                                                       \
     -volreg_tlrc_warp                                                       \
-    -volreg_warp_dxyz         3                                             \
-    -volreg_compute_tsnr      yes
+    -volreg_warp_dxyz         3
 
 

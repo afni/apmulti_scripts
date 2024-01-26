@@ -34,7 +34,7 @@ afni_proc.py                                                             \
 			      data/timing/times.TASK.txt                 \
     -regress_stim_labels      CONTROL TASK                               \
     -regress_stim_types       AM1                                        \
-    -regress_basis_multi      dmBLOCK                                    \
+    -regress_basis_multi      'dmUBLOCK(-1)'                             \
     -regress_motion_per_run                                              \
     -regress_censor_motion    0.3                                        \
     -regress_censor_outliers  0.05                                       \
@@ -50,5 +50,5 @@ afni_proc.py                                                             \
     -regress_make_ideal_sum   sum_ideal.1D                               \
     -regress_est_blur_errts                                              \
     -regress_run_clustsim     no                                         \
-    -html_review_style        pythonic -execute
+    -html_review_style        pythonic
 

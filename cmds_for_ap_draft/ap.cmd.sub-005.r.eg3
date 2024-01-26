@@ -4,7 +4,7 @@
 # include physio regressors
 # include GM-ROIs from FS (both 2000 and 2009 parc)
 
-# we do NOT include bandpassing here (see comments in text
+# we do NOT include bandpassing here (see comments in text)
 
 set d_ssw       = data/ssw
 set d_suma      = data/SUMA
