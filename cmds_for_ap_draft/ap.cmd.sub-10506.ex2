@@ -20,8 +20,8 @@ afni_proc.py                                                             \
     -tlrc_base                MNI152_2009_template_SSW.nii.gz            \
     -tlrc_NL_warp                                                        \
     -tlrc_NL_warped_dsets     data/ssw/anatQQ.sub-10506.nii              \
-			      data/ssw/anatQQ.sub-10506.aff12.1D         \
-		              data/ssw/anatQQ.sub-10506_WARP.nii         \
+                              data/ssw/anatQQ.sub-10506.aff12.1D         \
+                              data/ssw/anatQQ.sub-10506_WARP.nii         \
     -volreg_align_to          MIN_OUTLIER                                \
     -volreg_align_e2a                                                    \
     -volreg_tlrc_warp                                                    \
@@ -30,8 +30,8 @@ afni_proc.py                                                             \
     -mask_epi_anat            yes                                        \
     -blur_size                6                                          \
     -blur_in_mask             yes                                        \
-    -regress_stim_times       data/timing/times.CONTROL.txt 	         \
-			      data/timing/times.TASK.txt                 \
+    -regress_stim_times       data/timing/times.CONTROL.txt              \
+                              data/timing/times.TASK.txt                 \
     -regress_stim_labels      CONTROL TASK                               \
     -regress_stim_types       AM1                                        \
     -regress_basis_multi      'dmUBLOCK(-1)'                             \
