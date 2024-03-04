@@ -1,0 +1,6 @@
+
+set files = ( `find . -name cmd.\* -o -name readme\* -o -name run\*` )
+
+cp --parents -p $files  \
+   ~/afni/git/AFNI/apmulti_scripts/realtime_demo/rt.regress.apmulti
+
