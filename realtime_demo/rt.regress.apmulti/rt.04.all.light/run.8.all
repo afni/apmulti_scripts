@@ -11,7 +11,7 @@ if ( -f log/out.0.rr ) then
 endif
 
 echo ++ running receiver ...
-tcsh run.0.reciever >& /dev/null &
+tcsh run.0.receiver >& /dev/null &
 sleep 1
 
 echo ++ running afni ...
