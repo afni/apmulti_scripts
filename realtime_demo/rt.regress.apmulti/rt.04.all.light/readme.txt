@@ -17,7 +17,7 @@ averages, too.
 ---------------------------------------------------------------------------
 
 # To test, either run the 3 main scripts in one terminal each:
-#     run.0.reciever
+#     run.0.receiver
 #     run.1.afni
 #     run.2.dimon
 #
