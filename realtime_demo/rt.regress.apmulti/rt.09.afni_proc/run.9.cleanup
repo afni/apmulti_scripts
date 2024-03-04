@@ -1,0 +1,11 @@
+rm -fr data_ap data_epi
+rm -f log/*
+
+rm -f ../RT_input/RT_extras/file_list_3_echoes.txt
+if ( -f ../RT_input/RT_extras/vr_base_min_outlier+orig.HEAD ) then
+   rm -f ../RT_input/RT_extras/vr_base_min_outlier+orig.*
+endif
+if ( -f ../RT_input/RT_extras/s5.t2.star+orig.HEAD ) then
+   rm -f ../RT_input/RT_extras/s5.t2.star+orig.*
+endif
+

@@ -1,0 +1,13 @@
+
+# create time series datasets for each echo (3), 12 time points each,
+# and move the results into a data_epi directory
+
+
+Dimon -no_wait -dicom_org -sort_method geme_xnat -num_chan 3      \
+      -gert_create_dataset  -gert_to3d_prefix epi_12vols          \
+      -save_file_list file_list_3_echoes.txt                      \
+      -infile_pattern "../RT_input/dicom_12_vols/naming*.dcm"
+
+mkdir -p data_epi
+mv epi_12vols* dimon.files* file_list_3_echoes.txt GERT_Reco_dicom_004 data_epi
+

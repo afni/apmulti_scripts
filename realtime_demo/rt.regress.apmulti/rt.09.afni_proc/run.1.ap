@@ -1,0 +1,23 @@
+
+# run afni_proc.py to generate a T2* dataset (and OC for comparison)
+
+set drun = data_ap
+set ddir = ../data_epi
+
+mkdir -p $drun
+cd $drun
+
+cat > run.ap.txt << EOF
+afni_proc.py                                              \
+    -subj_id                OC.12vols                     \
+    -dsets_me_run           $ddir/epi_12vols*+orig*.HEAD  \
+    -echo_times             12.5 27.6 42.7                \
+    -blocks                 volreg mask combine           \
+    -tcat_remove_first_trs  2                             \
+    -volreg_align_to        MIN_OUTLIER                   \
+    -combine_method         OC
+
+EOF
+
+tcsh -xef run.ap.txt |& tee out.run.ap.txt
+tcsh -xef proc.OC.12vols |& tee out.run.proc.txt

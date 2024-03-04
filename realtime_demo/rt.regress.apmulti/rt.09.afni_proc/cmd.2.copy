@@ -1,0 +1,8 @@
+
+# copy vr_base, T2* and file_list to RT_extras
+
+set ddir = ../RT_input/RT_extras
+
+cp -p data_epi/file_list_3_echoes.txt $ddir
+cp -p data_ap/OC.12vols.results/vr_base_min_outlier+orig.* $ddir
+cp -p data_ap/OC.12vols.results/oc.work.r01/s5.t2.star+orig.* $ddir

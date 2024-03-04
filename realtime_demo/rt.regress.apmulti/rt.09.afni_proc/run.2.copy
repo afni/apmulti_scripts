@@ -1,0 +1,4 @@
+
+# run script to copy AP results into parent tree, for use in realtime
+
+tcsh -xef cmd.2.copy |& tee log/out.cmd.2.copy.txt

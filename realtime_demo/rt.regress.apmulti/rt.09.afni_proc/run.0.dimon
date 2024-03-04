@@ -1,0 +1,2 @@
+
+tcsh -x cmd.0.dimon |& tee log/out.cmd.0.dimon.txt
