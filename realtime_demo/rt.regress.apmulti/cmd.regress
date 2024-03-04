@@ -3,14 +3,22 @@
 # 0. if we have old results, replace in regress tree
 # 1. run all rt.*/run.8.all scripts
 # 2. compare against regress tree
+#
+# disk usage: 43 M -> 77 M (currently)
+# run time:   75 s (currently) (scripts have sleep's in them)
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
 # option:   replace, keep, clean_rt
-#           replace  : replace old regr with rt results; run rt; compare
-#           keep     : just run rt and compare (keep old regr)
 #           clean_rt : run cleanup scripts in rt.* dirs
+#           copy_old : just copy old results and quit (first part of replace)
+#           keep     : just run rt and compare (keep old regr)
+#           replace  : replace old regr with rt results; run rt; compare
+#
+# ** first time use: run with 'keep' mode, generally use 'replace'
 set old = replace
 
+# ---------------------------------------------------------------------------
 # general
 set dreg = keep.regress    # main old resgression (partial) result tree
 set runall = run.8.all     # script to run all local scripts
@@ -21,12 +29,16 @@ set testfile = $dreg/rt.00.basic/log/out.2.dimon
 
 echo ""
 
-if ( $old == replace ) then
+if ( $old == replace || $old == copy_old ) then
    echo "-- removing old $dreg dir ..."
    rm -fr $dreg
    mkdir -p $dreg
    echo "-- copying out.[23]* into new $dreg tree ..."
    cp --parents -p `find rt.??.* -name 'out.[23]*'` $dreg
+
+   if ( $old == copy_old ) then
+      exit 0
+   endif
 
 # for clean rt, we terminate afterwards
 else if ( $old == clean_rt ) then

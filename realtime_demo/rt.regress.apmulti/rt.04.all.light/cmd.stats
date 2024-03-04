@@ -17,7 +17,7 @@ set mask  = $dextras/Clust_mask+orig
    >& /dev/null
 
 
-# and compare with vals from realtime_reciever.py
+# and compare with vals from realtime_receiver.py
 # -- grep 'extras:' vs 'extra2:' from ROIs_and_data
 grep extras: $dout/out.0.rr | cut -d ' ' -f5- | 1dtranspose - - \
          | 1dcat - - > $dout/vals.rtr.1D
