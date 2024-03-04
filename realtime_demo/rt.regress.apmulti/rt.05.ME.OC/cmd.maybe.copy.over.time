@@ -1,0 +1,23 @@
+   set indir = PLACE/TO/COPY/FROM
+   set outdir = PLACE/TO/COPY/FILES/TO
+      
+   set chrono_files = ( `cat files.chrono.txt` )
+   set nfiles = $#chrono_files
+   set first = 1
+   set last = 10
+
+   while ( 1 )
+      if ( $last > $nfiles ) last = $nfiles
+      foreach file ( $chrono_files[$first-$last] )
+         cp -p $indir/$file $outdir
+      end
+     
+      if ( $last == $nfiles ) break
+
+      @ first += 10
+      @ last += 10
+
+      sleep 1
+   end
+
+

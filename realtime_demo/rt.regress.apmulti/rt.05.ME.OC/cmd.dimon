@@ -1,0 +1,7 @@
+
+# process 3 echoes in realtime, but sort all files first
+# and pass a volume every half second
+Dimon -rt -no_wait -num_chan 3 -te_list "12.5 27.6 42.7" -tr 0.5  \
+      -save_details log/D -sort_method geme_index                 \
+      -infile_pattern "../RT_input/dicom_12_vols/naming*.dcm"
+
