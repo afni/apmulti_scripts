@@ -1,0 +1,30 @@
+
+// Note that environment variables can effectely be set via ~/.afnirc as well.
+//
+// But be aware that actual environment variabels take priority over ~/.afnirc
+// variables, and command line env vars take prioriy over actual env vars,
+//    e.g. afni -rt -DAFNI_REALTIME_Registration=3D:_realtime ...
+
+
+***ENVIRONMENT
+
+AFNI_REALTIME_Registration      = 3D:_realtime
+AFNI_REALTIME_Reg_Base_Mode     = External_Dataset
+AFNI_REALTIME_External_Dataset  = ../../RT_input/RT_extras/vr_base_min_outlier+orig.HEAD
+AFNI_REALTIME_Base_Image        = 0
+
+
+AFNI_REALTIME_CHMERMODE         = 5
+AFNI_REALTIME_CM_REG_MODE       = 2
+AFNI_REALTIME_Reg_Source_Chan   = 1
+AFNI_REALTIME_T2star_ref        = ../../RT_input/RT_extras/s5.t2.star+orig
+
+AFNI_REALTIME_Graph             = Realtime
+AFNI_REALTIME_MP_HOST_PORT      = localhost:53214
+AFNI_REALTIME_SEND_VER          = YES
+AFNI_REALTIME_SHOW_TIMES        = YES
+
+AFNI_REALTIME_Mask_Vals         = ROI_means
+AFNI_REALTIME_Verbose           = Very
+AFNI_REALTIME_Mask_Dset         = ../../RT_input/RT_extras/Clust_mask+orig
+
