@@ -1,0 +1,27 @@
+
+
+set dafni = afni.rt
+set dOC   = ../rt.09.afni_proc/data_ap/OC.12vols.results
+set dextras = ../RT_input/RT_extras
+set dout  = log
+set label = 3.stats
+
+set OCset = pb02.OC.12vols.r01.combine+orig
+
+# do we have RT OC results?
+set OCrt = $dafni/rt.__001%mrg_optComb+orig.HEAD
+if ( ! -f $OCrt ) then
+   echo "** missing RT OC result $OCrt"
+   exit 1
+endif
+
+set OCrt = `\ls -1 afni.rt/rt.__*mrg_optComb+orig.HEAD | tail -n 1`
+
+if ( ! -f $dafni/$OCset.HEAD ) then
+   echo "++ copying OC result from AP for approximate comparison"
+   echo "   (note the registration is slightly different)"
+   3dcopy $dOC/$OCset $dafni/
+endif
+
+# and extract the last 10 volumes of the generated RT OC dataset
+3dTcat -overwrite -prefix $dafni/OC_RT.nii.gz $OCrt'[2..$]'
