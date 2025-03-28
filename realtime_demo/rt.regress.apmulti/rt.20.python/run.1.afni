@@ -1,0 +1,2 @@
+
+tcsh -x cmd.afni |& tee log/out.1.afni
