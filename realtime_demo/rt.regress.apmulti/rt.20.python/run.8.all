@@ -1,0 +1,30 @@
+
+# display background information for this test
+if ( -f readme.txt ) then
+   grep -v '#' readme.txt
+endif
+
+# possibly clean up from last time
+if ( -f log/out.1.afni ) then
+   echo ++ cleaning up from last time ...
+   tcsh run.9.cleanup
+endif
+
+echo ++ running afni ...
+tcsh run.1.afni >& /dev/null &
+echo -- nap 5 ...
+sleep 5
+
+echo ++ running python client ...
+tcsh -x run.2.py2afni >& /dev/null
+
+echo -- nap 3 ...
+sleep 3
+
+echo -- finished, killing realtime_receiver.py and afni ...
+kill -HUP %1
+echo -- DONE
+
+echo ""
+sleep 2
+

@@ -1,0 +1,2 @@
+
+python cmd.py2afni.py |& tee log/out.2.py2afni
