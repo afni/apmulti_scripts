@@ -1,0 +1,2 @@
+
+./cmd.py2r.simple.py |& tee log/out.1.p2r.simple.txt

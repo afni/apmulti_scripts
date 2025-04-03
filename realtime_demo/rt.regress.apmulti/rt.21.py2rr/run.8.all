@@ -1,0 +1,37 @@
+
+# display background information for this test
+if ( -f readme.txt ) then
+   grep -v '#' readme.txt
+endif
+
+# possibly clean up from last time
+if ( -f log/out.0.rr ) then
+   echo ++ cleaning up from last time ...
+   tcsh run.9.cleanup
+endif
+
+echo ++ running receiver ...
+tcsh run.0.receiver >& /dev/null &
+echo -- nap 2 ...
+sleep 2
+
+echo ++ running python simple client ...
+tcsh -x run.1.p2r.simple >& /dev/null
+
+echo -- nap 2 ...
+sleep 2
+
+echo ++ running python main client ...
+tcsh -x run.2.p2r >& /dev/null
+
+echo -- nap 2 ...
+sleep 2
+
+
+echo -- finished, killing realtime_receiver.py ...
+kill -HUP %1
+echo -- DONE
+
+echo ""
+sleep 2
+

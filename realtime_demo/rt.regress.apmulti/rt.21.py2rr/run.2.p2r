@@ -1,0 +1,2 @@
+
+./cmd.py2receiver.py |& tee log/out.2.p2r.txt
