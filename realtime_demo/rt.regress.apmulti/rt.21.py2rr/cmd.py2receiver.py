@@ -7,7 +7,7 @@ import numpy as np
 
 host = 'localhost'
 port = 53214
-nt   = 4            # number of time points of data to send
+nt   = 5            # number of time points of data to send
 
 # ======================================================================
 # data to send: magic, nROIs, and a per-TR list of 6+nROIs values

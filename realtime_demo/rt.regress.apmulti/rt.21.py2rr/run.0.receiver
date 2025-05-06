@@ -1,1 +1,4 @@
+
+if ( ! -d log ) mkdir log
+
 realtime_receiver.py -show_data yes |& tee log/out.0.rr
