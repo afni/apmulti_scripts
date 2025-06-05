@@ -46,7 +46,7 @@ except:
     print("** failed to recv() %d bytes of data" % nbytes)
     sys.exit(1)
 
-print("-- closing up shop, not waiting for actual data")
+print("-- closing up shop, not waiting for motion/ROIs")
 
 data_sock.close()
 server_sock.close()
