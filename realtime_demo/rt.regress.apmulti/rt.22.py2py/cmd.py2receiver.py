@@ -66,19 +66,6 @@ except:
     sockd.close()
     sys.exit(1)
 
-# send nt time points of motion and extras
-try:
-    print("-- send data ...")
-    for d in npdata:
-        sockd.sendall(d)
-        time.sleep(0.5)
-except:
-    print("** FAILURE to send data")
-    print("   - this is okay and expected with cmd.receiver.py,")
-    print("     which closes ports after receiving magic and nROIs\n")
-    sockd.close()
-    sys.exit(1)
-
 print("++ SUCCESS\n")
 
 # and close
