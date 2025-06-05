@@ -8,7 +8,6 @@ import numpy as np
 
 host = 'localhost'
 port = 53214
-nt   = 5            # number of time points of data to send
 
 # ======================================================================
 # data to send: magic, nROIs, and a per-TR list of 6+nROIs values
@@ -25,12 +24,6 @@ nprois  = np.array(nrois, dtype=np.int32)
 # create 2D list of time points of data
 dall = []
 d = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 10, 20]  # basic motion and ROI data
-
-# for each time point, append current data and alter current data
-for i in range(nt):
-   dall.append(d)
-   d = [1.1*v for v in d]
-npdata = np.array(dall, dtype=np.float32)
 
 
 # ======================================================================
