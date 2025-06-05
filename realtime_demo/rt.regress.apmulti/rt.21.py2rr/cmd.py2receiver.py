@@ -2,7 +2,7 @@
 
 # run this with no arguments to test communcation with realtime_receiver.py
 
-import socket, time
+import socket, time, sys
 import numpy as np
 
 host = 'localhost'
@@ -48,19 +48,35 @@ print("   (and send %d time points of data)\n" % nt)
 # open a socket, send magic and nrois, then send data
 sockd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
+    print("-- connect() and send magic ...")
     sockd.connect((host, port))
     time.sleep(1)
     sockd.sendall(npmagic)
-    sockd.sendall(nprois)
+except:
+    print("** FAILURE to connect to remote host at %s:%s\n" % (host, port))
+    sockd.close()
+    sys.exit(1)
 
-    # send nt time points of motion and extras
+try:
+    print("-- send nROIs ...")
+    sockd.sendall(nprois)
+except:
+    print("** FAILURE to send nROIs")
+    sockd.close()
+    sys.exit(1)
+
+# send nt time points of motion and extras
+try:
+    print("-- send data ...")
     for d in npdata:
         sockd.sendall(d)
         time.sleep(0.5)
-
-    print("++ SUCCESS\n")
 except:
-    print("** FAILURE to connect to remote host at %s:%s\n" % (host, port))
+    print("** FAILURE to send data")
+    sockd.close()
+    sys.exit(1)
+
+print("++ SUCCESS\n")
 
 # and close
 sockd.close()
