@@ -1,0 +1,4 @@
+
+if ( ! -d log ) mkdir log
+
+./cmd.receiver.py |& tee log/out.0.recv.txt

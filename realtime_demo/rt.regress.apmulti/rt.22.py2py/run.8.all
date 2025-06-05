@@ -1,0 +1,26 @@
+
+# display background information for this test
+if ( -f readme.txt ) then
+   grep -v '#' readme.txt
+endif
+
+# possibly clean up from last time
+if ( -f log/out.0.rr ) then
+   echo ++ cleaning up from last time ...
+   tcsh run.9.cleanup
+endif
+
+echo ++ running receiver ...
+tcsh run.0.receiver >& /dev/null &
+echo -- nap 2 ...
+sleep 2
+
+echo ++ running sender ...
+tcsh -x run.1.send_data >& /dev/null
+
+echo -- nap 2 ...
+sleep 2
+
+echo -- DONE
+echo ""
+
