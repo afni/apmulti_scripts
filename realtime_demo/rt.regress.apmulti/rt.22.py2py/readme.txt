@@ -8,5 +8,5 @@ Please modify for your own evil needs.
 
 # To test, run the 2 main scripts in one terminal each:
 #     tcsh run.0.receiver
-#     tcsh run.1.send_data
+#     tcsh run.1.sender
 

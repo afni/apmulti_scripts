@@ -1,2 +1,0 @@
-
-./cmd.sender.py |& tee log/out.1.send.txt
