@@ -41,12 +41,11 @@ print("\n"                                                       \
       "      python cmd.receiver.py\n"                           \
       "   (use ctrl-c to stop)\n")
 
-print("-- trying to connect to rr.py at %s:%s ..." % (host, port))
-print("   (and send %d time points of data)\n" % nt)
+print("-- trying to connect to rr.py at %s:%s ...\n" % (host, port))
 
 
 # ======================================================================
-# open a socket, send magic and nrois, then send data
+# open a socket, send magic and nrois
 sockd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
     print("-- connect() and send magic ...")
@@ -65,6 +64,10 @@ except:
     print("** FAILURE to send nROIs")
     sockd.close()
     sys.exit(1)
+
+
+# no other data (motion, ROI aves) is sent for this test
+
 
 print("++ SUCCESS\n")
 
