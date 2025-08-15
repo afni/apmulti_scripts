@@ -8,6 +8,11 @@ set label = 3.stats
 set inset = $dafni/rt.__001%reg3D+orig
 set mask  = $dextras/Clust_mask+orig
 
+# grab motion parameters, just to have
+awk -F: '/motion/ {print $2}' log/out.0.rr | 1dcat stdin > mm
+1dcat mm'[3,4,5,0,1,2]' > log/out.0.motion.1D
+\rm mm
+
 echo ++ running 3dROIstats on registered time series
 ( 3dROIstats -quiet -mask $mask $inset   \
    | 1d_tool.py -infile - -write - -write_sep '  ' -write_style ljust   \
