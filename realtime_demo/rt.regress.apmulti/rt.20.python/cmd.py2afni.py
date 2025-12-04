@@ -4,6 +4,7 @@ import time
 
 def sock_open_ctrl():
    # open socket at control port and say where we will send main data
+   # see afni_ports.c, AFNI_TCP_PORT and old BASE_TCP_CONTROL
    sockc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
    sockc.connect(('localhost', 7961))
    dport = b'tcp:localhost:7960\0'
